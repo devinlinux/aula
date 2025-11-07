@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 pub enum Major {
     Accounting,
     AfricanaStudies,
@@ -71,9 +73,9 @@ pub enum Major {
     TheologyAndReligiousStudies,
 }
 
-impl ToString for Major {
-    fn to_string(&self) -> String {
-        match self {
+impl Display for Major {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
             Major::Accounting => String::from("Accounting"),
             Major::AfricanaStudies => String::from("Africana Studies"),
             Major::ArabAndIslamicStudies => String::from("Arab And Islamic Studies"),
@@ -144,6 +146,7 @@ impl ToString for Major {
             Major::SpanishStudies => String::from("Spanish Studies"),
             Major::Statistics => String::from("Statistics"),
             Major::TheologyAndReligiousStudies => String::from("Theology And Religious Studies"),
-        }
+        };
+        write!(f, "{}", str)
     }
 }
