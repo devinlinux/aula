@@ -65,7 +65,7 @@ const fragmentShader = `
     uniform float rotation;
     uniform float time;
 
-    const flost e = 2.71828182845904523536;
+    const float e = 2.71828182845904523536;
 
     float noise(vec2 texCoord) {
         float G = e;
