@@ -6,14 +6,10 @@ export const metadata: Metadata = {
   description: "INSERT_DESCRIPTION_HERE",
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+export default function RootLayer(props: { children: React.ReactNode }) {
+    const { children } = props
     return (
         <html>
-            <head />
             <body>
                 <Provider>{children}</Provider>
             </body>
