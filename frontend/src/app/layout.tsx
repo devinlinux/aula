@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function RootLayer(props: { children: React.ReactNode }) {
     const { children } = props
     return (
-        <html>
+        <html lang="en" suppressHydrationWarning>
             <body>
                 <Provider>{children}</Provider>
             </body>
