@@ -24,6 +24,7 @@ impl WebServer {
                     .allow_any_header()
                     .max_age(3600)
                 )
+                .service(crate::server::routes::index)
         })
         .listen(listener)?.run();
 
