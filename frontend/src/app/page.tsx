@@ -1,7 +1,9 @@
 import {
     Box
 } from "@chakra-ui/react"
+
 import Silk from "@/components/animations/silk"
+import Navbar from "@/components/ui/navbar"
 
 export default function Home() {
     return (
@@ -20,6 +22,8 @@ export default function Home() {
                 noiseIntensity={0.5}
                 rotation={1.2}
             />
+
+            <Navbar />
         </Box>
     )
 }

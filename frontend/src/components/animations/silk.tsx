@@ -16,8 +16,8 @@ import {
     Color,
     Mesh,
     ShaderMaterial,
+    IUniform,
 } from "three"
-import { IUniform } from "three"
 
 type RGB = [ number, number, number ]
 
