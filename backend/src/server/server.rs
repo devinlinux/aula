@@ -25,6 +25,7 @@ impl WebServer {
                     .max_age(3600)
                 )
                 .service(crate::server::routes::index)
+                .service(crate::server::routes::health_check)
         })
         .listen(listener)?.run();
 
