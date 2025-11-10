@@ -1,1 +1,3 @@
+mod routes;
+
 mod server;
