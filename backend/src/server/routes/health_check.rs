@@ -1,6 +1,6 @@
 use actix_web::{ get, HttpResponse, Responder };
 
-#[get("/health-check")]
+#[get("/health_check")]
 pub async fn health_check() -> impl Responder {
     HttpResponse::Ok()
 }
@@ -13,7 +13,7 @@ mod tests {
         let client = reqwest::Client::new();
 
         let response = client
-            .get(&format!("127.0.0.1:{}/health_check", crate::server::TEST_PORT))
+            .get(&format!("http://127.0.0.1:{}/health_check", crate::server::TEST_PORT))
             .send()
             .await
             .expect("Failed to execute request");
