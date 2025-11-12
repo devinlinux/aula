@@ -87,4 +87,10 @@ impl UserDatabase {
             )
         )
     }
+
+    pub fn num_users(&self) -> std::io::Result<usize> {
+        let file = std::fs::File::open(&self.path)?;
+        let reader = BufReader::new(file);
+        Ok(reader.lines().count())
+    }
 }
