@@ -1,5 +1,7 @@
 use std::fmt::Display;
+use serde::{ Serialize, Deserialize };
 
+#[derive(Serialize, Deserialize)]
 pub enum Major {
     Accounting,
     AfricanaStudies,
