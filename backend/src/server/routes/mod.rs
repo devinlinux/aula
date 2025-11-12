@@ -4,3 +4,4 @@ mod register;
 
 pub use index::*;
 pub use health_check::*;
+pub use register::*;

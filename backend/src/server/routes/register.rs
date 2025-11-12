@@ -1,6 +1,11 @@
+use core::num;
+use std::sync::{ Arc, Mutex };
+
 use actix_web::{ post, web, HttpResponse, HttpRequest, Responder };
 use serde::{ Serialize, Deserialize };
+
 use crate::data::{ Major, User };
+use crate::db::UserDatabase;
 
 #[derive(Serialize, Deserialize)]
 struct RegisterData {
@@ -11,13 +16,15 @@ struct RegisterData {
     graduation_year: i16,
 }
 
-impl Into<User> for RegisterData {
-    fn into(self) -> User {
-        User::new(self.email, self.first_name, self.last_name, self.major, self.graduation_year)
-    }
-}
+#[post("/register")]
+pub async fn register(db: web::Data<Arc<Mutex<UserDatabase>>>, num_users: web::Data<Arc<Mutex<usize>>>, data: web::Json<RegisterData>, req: HttpRequest) -> impl Responder {
+    let db = db.lock().unwrap();
+    let mut count = num_users.lock().unwrap();
 
-#[post("/pre-register")]
-pub async fn register(data: web::Json<RegisterData>, req: HttpRequest) -> impl Responder {
-    HttpResponse::Ok().body("Registration Successful")
+    db.add_user(User::new(*count, data.email.clone(), data.first_name.clone(), data.last_name.clone(), data.major, data.graduation_year)).map_err(|e| {
+        return HttpResponse::InternalServerError().body(format!("Error: {}", e))
+    }).unwrap();
+    *count += 1;
+
+    HttpResponse::Ok()
 }

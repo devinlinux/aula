@@ -13,9 +13,9 @@ pub struct User {
 }
 
 impl User {
-    pub fn new(email: String, first_name: String, last_name: String, major: Major, graduation_year: i16) -> User {
+    pub fn new(id: usize, email: String, first_name: String, last_name: String, major: Major, graduation_year: i16) -> User {
         Self {
-            id: 0,
+            id,
             email,
             first_name,
             last_name,

@@ -27,10 +27,12 @@ impl WebServer {
         };
 
         let user_db = Arc::new(Mutex::new(user_db));
+        let num_users = Arc::new(Mutex::new(0usize));
 
         let server = HttpServer::new(move || {
             App::new()
                 .app_data(web::Data::new(user_db.clone()))
+                .app_data(web::Data::new(num_users.clone()))
                 .app_data(web::JsonConfig::default().limit(MAX_SIZE))
                 .wrap(
                     actix_cors::Cors::default()
@@ -41,6 +43,7 @@ impl WebServer {
                 )
                 .service(crate::server::routes::index)
                 .service(crate::server::routes::health_check)
+                .service(crate::server::routes::register)
         })
         .listen(listener)?.run();
 
