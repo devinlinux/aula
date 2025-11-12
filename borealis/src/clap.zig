@@ -1,6 +1,8 @@
 const std = @import("std");
 const borealis = @import("borealis");
 const assert = std.debug.assert;
+const Borealis = @import("internals/db.zig").Borealis;
+const Mode = @import("internals/db.zig").Mode;
 
 const commands = [_][]const u8 {
     "-h", "--help",
@@ -18,11 +20,24 @@ pub fn evaluateArgs(args: *std.process.ArgIterator) void {
         } else if (std.mem.eql(u8, "-v", arg) or std.mem.eql(u8, "--version", arg)) {
             version();
         } else if (std.mem.eql(u8, "-r", arg) or std.mem.eql(u8, "--recover", arg)) {
-            recover();
+            const dir = args.next();
+            if (dir == null) {
+                std.debug.print("Expected directory argument for recover command\n", .{});
+                std.process.exit(1);
+            }
+
+            recover(dir.?);
         } else if (std.mem.eql(u8, "-n", arg) or std.mem.eql(u8, "--new", arg)) {
-            new();
+            const dir = args.next();
+            if (dir == null) {
+                std.debug.print("Expected directory argument for new command\n", .{});
+                std.process.exit(1);
+            }
+
+            new(dir.?);
         } else {
             notFound();
+            std.process.exit(1);
         }
     }
 }
@@ -40,12 +55,12 @@ fn version() void {
     std.debug.print("Borealis {s}\n", .{borealis.VERSION});
 }
 
-fn recover() void {
-
+fn recover(dir: []const u8) void {
+    _ = Borealis.init(dir, Mode.recover);
 }
 
-fn new() void {
-
+fn new(dir: []const u8) void {
+    _ = Borealis.init(dir, Mode.new);
 }
 
 fn notFound() void {
