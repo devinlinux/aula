@@ -31,6 +31,7 @@ fn help() void {
     std.debug.print("Borealis {s}\n", .{borealis.VERSION});
     std.debug.print("Commands:\n", .{});
     std.debug.print("-h, --help: print available commands\n", .{});
+    std.debug.print("-v, --version: display the version\n", .{});
     std.debug.print("-r, --recover {{dir}}: run using data stored in dir\n", .{});
     std.debug.print("-n, --new {{dir}}: create a new database using dir\n", .{});
 }
