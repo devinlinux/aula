@@ -1,7 +1,7 @@
 const std = @import("std");
 const borealis = @import("borealis");
 const assert = std.debug.assert;
-const Borealis = @import("internals/db.zig").Borealis;
+const UserDatabase = @import("internals/db.zig").UserDatabase;
 const Mode = @import("internals/db.zig").Mode;
 
 const commands = [_][]const u8 {
@@ -62,14 +62,14 @@ fn version() void {
 fn recover(dir: []const u8) void {
     const allocator = std.heap.smp_allocator;
 
-    var db = Borealis.init(allocator, dir, Mode.recover);
+    var db = UserDatabase.init(allocator, dir, Mode.recover);
     defer db.deinit();
 }
 
 fn new(dir: []const u8) void {
     const allocator = std.heap.smp_allocator;
 
-    var db = Borealis.init(allocator, dir, Mode.new);
+    var db = UserDatabase.init(allocator, dir, Mode.new);
     defer db.deinit();
 }
 
