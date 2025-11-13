@@ -2,6 +2,8 @@ const std = @import("std");
 const User = @import("../types/user.zig").User;
 
 const DB_FILE: []const u8 = "users.db";
+const WRITE_FILE_PATH: []const u8 = "users_flush.db";
+const MAX_LINE_LENGTH: usize = 312;
 const MEMTABLE_MAX_SIZE: usize = 100_000;
 
 pub const Mode = enum {
@@ -11,6 +13,7 @@ pub const Mode = enum {
 
 pub const UserDatabase = struct {
     memtable: std.AutoHashMap(usize, User),
+    dir: []const u8,
     file_path: []const u8,
 
     pub fn init(allocator: std.mem.Allocator, dir: []const u8, mode: Mode) UserDatabase {
@@ -53,6 +56,7 @@ pub const UserDatabase = struct {
 
         return UserDatabase {
             .memtable = std.AutoHashMap(usize, User).init(allocator),
+            .dir = dir,
             .file_path = file_path,
         };
     }
@@ -62,7 +66,37 @@ pub const UserDatabase = struct {
     }
 
     pub fn flush(self: *UserDatabase) !void {
-        _ = self;
+        const allocator = std.heap.smp_allocator;
+
+        const read_file_path = std.fmt.allocPrint(allocator, "{s}/{s}", .{self.dir, DB_FILE}) catch |err| {
+            std.debug.print("Error creating read file path for flush: {}\n", .{err});
+            return err;
+        };
+        defer allocator.free(read_file_path);
+
+        const read_file = std.fs.cwd().openFile(read_file_path, .{}) catch |err| {
+            std.debug.print("Error opening users db for reading: {}\n", .{err});
+            return err;
+        };
+        defer read_file.close();
+
+        const write_file_path = std.fmt.allocPrint(allocator, "{s}/{s}", .{self.dir, WRITE_FILE_PATH}) catch |err| {
+            std.debug.print("Error creating write file path for flush: {}\n", .{err});
+            return err;
+        };
+        defer allocator.free(write_file_path);
+
+        const write_file = std.fs.cwd().createFile(write_file_path, .{}) catch |err| {
+            std.debug.print("Error creating write file for flush: {}\n", .{err});
+            return err;
+        };
+        defer write_file.close();
+
+        var buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
+        var reader = read_file.reader(&buffer);
+        while (try reader.interface.takeDelimiter('\n')) |line| {
+            std.debug.print("{s}\n", .{line});
+        }
     }
 
     pub fn insertUser(self: *UserDatabase, user: User) void {

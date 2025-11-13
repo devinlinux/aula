@@ -8,14 +8,14 @@ pub fn main() !void {
     clap.evaluateArgs(&args);
 
     const user = User {
-        .id = 0,
-        .email = "mbobrows@villanova.edu",
-        .password = "HASH-HERE",
-        .first_name = "Michael",
-        .last_name = "Bobrowski",
-        .profile_picture = "UUID-HERE",
+        .id = std.math.maxInt(usize),
+        .email = "mbobrows@villanova.edu     ",
+        .password = "                                                                ",
+        .first_name = "Michael        ",
+        .last_name = "Bobrowski      ",
+        .profile_picture = "                                ",
         .major = Major.computer_engineering,
-        .graduation_year = 2029,
+        .graduation_year = std.math.maxInt(i16),
     };
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
