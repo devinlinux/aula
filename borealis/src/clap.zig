@@ -1,6 +1,6 @@
 const std = @import("std");
 const borealis = @import("borealis");
-const assert = std.debug.assert;
+const controller = @import("internals/controller.zig");
 const UserDatabase = @import("internals/db.zig").UserDatabase;
 const Mode = @import("internals/db.zig").Mode;
 
@@ -31,7 +31,7 @@ pub fn evaluateArgs(args: *std.process.ArgIterator) void {
                 std.process.exit(1);
             }
 
-            recover(dir.?);
+            controller.recoverDatabase(dir.?);
         } else if (std.mem.eql(u8, "-n", arg) or std.mem.eql(u8, "--new", arg)) {
             const dir = args.next();
             if (dir == null) {
@@ -39,7 +39,7 @@ pub fn evaluateArgs(args: *std.process.ArgIterator) void {
                 std.process.exit(1);
             }
 
-            new(dir.?);
+            controller.newDatabase(dir.?);
         } else {
             notFound();
         }
@@ -57,24 +57,6 @@ fn help() void {
 
 fn version() void {
     std.debug.print("Borealis {s}\n", .{borealis.VERSION});
-}
-
-fn recover(dir: []const u8) void {
-    const allocator = std.heap.smp_allocator;
-
-    var db = UserDatabase.init(allocator, dir, Mode.recover);
-    db.flush() catch |err| {
-        std.debug.print("Error during flush: {}\n", .{err});
-        std.process.exit(1);
-    };
-    defer db.deinit();
-}
-
-fn new(dir: []const u8) void {
-    const allocator = std.heap.smp_allocator;
-
-    var db = UserDatabase.init(allocator, dir, Mode.new);
-    defer db.deinit();
 }
 
 fn notFound() void {
