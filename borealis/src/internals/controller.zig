@@ -6,6 +6,9 @@ pub fn recoverDatabase(dir: []const u8) void {
     const allocator = std.heap.smp_allocator;
 
     var db = UserDatabase.init(allocator, dir, Mode.recover);
+    db.flush() catch |err| {
+        std.debug.print("Error while flushing: {}", .{err});
+    };
     defer db.deinit();
 }
 

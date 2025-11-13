@@ -95,7 +95,14 @@ pub const UserDatabase = struct {
         var buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
         var reader = read_file.reader(&buffer);
         while (try reader.interface.takeDelimiter('\n')) |line| {
-            std.debug.print("{s}\n", .{line});
+            const parsed_user = std.json.parseFromSlice(User, allocator, line, .{}) catch |err| {
+                std.debug.print("Error deserializing user from users db, this should not happen!: {}\n", .{err});
+                std.process.exit(1);
+            };
+
+            const user = parsed_user.value;
+
+            std.debug.print("{s}\n", .{user.first_name});
         }
     }
 
