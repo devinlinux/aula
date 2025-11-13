@@ -102,10 +102,18 @@ pub const UserDatabase = struct {
 
             const user = parsed_user.value;
 
+            if (self.memtable.contains(user.id) and std.meta.eql(self.memtable.get(user.id).?, user)) {
+                _ = self.memtable.remove(user.id);
+                //  write line to write_file
+            } else {
+                //  write from memtable to write_file
+            }
+
             std.debug.print("{s}\n", .{user.first_name});
         }
     }
 
+    //  TODO: flush if at max size
     pub fn insertUser(self: *UserDatabase, user: User) void {
         self.memtable.put(user.id, user);
     }
