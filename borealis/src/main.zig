@@ -9,11 +9,11 @@ pub fn main() !void {
 
     const user = User {
         .id = std.math.maxInt(usize),
-        .email = "mbobrows@villanova.edu     ",
-        .password = "                                                                ",
-        .first_name = "Michael        ",
-        .last_name = "Bobrowski      ",
-        .profile_picture = "                                ",
+        .email = "mbobrows@villanova.edu",
+        .password = "hash",
+        .first_name = "Michael",
+        .last_name = "Bobrowski",
+        .profile_picture = "uuid",
         .major = Major.computer_engineering,
         .graduation_year = std.math.maxInt(i16),
     };
