@@ -12,6 +12,11 @@ const commands = [_][]const u8 {
 };
 
 pub fn evaluateArgs(args: *std.process.ArgIterator) void {
+    if (args.inner.count < 2) {
+        std.debug.print("Expected a command but found none\n", .{});
+        std.process.exit(1);
+    }
+
     _ = args.next();
 
     while (args.next()) |arg| {
@@ -37,7 +42,6 @@ pub fn evaluateArgs(args: *std.process.ArgIterator) void {
             new(dir.?);
         } else {
             notFound();
-            std.process.exit(1);
         }
     }
 }
@@ -65,4 +69,5 @@ fn new(dir: []const u8) void {
 
 fn notFound() void {
     std.debug.print("Command not found, use -h or --help for a list\n", .{});
+    std.process.exit(1);
 }
