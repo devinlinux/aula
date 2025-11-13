@@ -14,7 +14,7 @@ pub const Borealis = struct {
     read_path: []const u8,
     write_path: []const u8,
 
-    pub fn init(dir: []const u8, mode: Mode) Borealis {
+    pub fn init(allocator: std.mem.Allocator, dir: []const u8, mode: Mode) Borealis {
         const stat = std.fs.cwd().statFile(dir) catch null;
         const exists = stat != null and stat.?.kind == .directory;
 
@@ -38,10 +38,6 @@ pub const Borealis = struct {
             },
         }
 
-        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-        defer std.debug.assert(gpa.deinit() == .ok);
-        const allocator = gpa.allocator();
-
         const read_path = std.fmt.allocPrint(allocator, "{s}/{s}", .{dir, READ_FILE}) catch |err| {
             std.debug.print("Error creating read path for database: {}", .{err});
             std.process.exit(1);
@@ -54,13 +50,14 @@ pub const Borealis = struct {
         };
         defer allocator.free(write_path);
 
-        var memtable = std.AutoHashMap(usize, User).init(allocator);
-        defer memtable.deinit();
-
         return Borealis {
-            .memtable = memtable,
+            .memtable = std.AutoHashMap(usize, User).init(allocator),
             .read_path = read_path,
             .write_path = write_path,
         };
+    }
+
+    pub fn deinit(self: *Borealis) void {
+        self.memtable.deinit();
     }
 };

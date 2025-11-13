@@ -60,11 +60,17 @@ fn version() void {
 }
 
 fn recover(dir: []const u8) void {
-    _ = Borealis.init(dir, Mode.recover);
+    const allocator = std.heap.smp_allocator;
+
+    var db = Borealis.init(allocator, dir, Mode.recover);
+    defer db.deinit();
 }
 
 fn new(dir: []const u8) void {
-    _ = Borealis.init(dir, Mode.new);
+    const allocator = std.heap.smp_allocator;
+
+    var db = Borealis.init(allocator, dir, Mode.new);
+    defer db.deinit();
 }
 
 fn notFound() void {
