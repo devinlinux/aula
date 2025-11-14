@@ -92,6 +92,15 @@ pub const UserDatabase = struct {
         };
         defer write_file.close();
 
+        write_file.seekFromEnd(0) catch |err| {
+            std.debug.print("Error going to end of write file during flush: {}\n", .{err});
+            return err;
+        };
+
+        var write_buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
+        var writer = write_file.writer(&write_buffer);
+        var out: std.Io.Writer.Allocating = .init(allocator);
+
         var buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
         var reader = read_file.reader(&buffer);
         while (try reader.interface.takeDelimiter('\n')) |line| {
@@ -105,8 +114,18 @@ pub const UserDatabase = struct {
             if (self.memtable.contains(user.id) and std.meta.eql(self.memtable.get(user.id).?, user)) {
                 _ = self.memtable.remove(user.id);
                 //  write line to write_file
+
             } else {
                 //  write from memtable to write_file
+                const memtable_user = self.memtable.get(user.id).?;
+                _ = self.memtable.remove(memtable_user.id);
+
+                try std.json.Stringify.value(user, .{}, &out.writer);
+                var arr = out.toArrayList();
+                defer arr.deinit(allocator);
+
+                const json = try std.fmt.allocPrint(allocator, "{s}\n", .{arr.items});
+                try writer.interface.writeAll(json);
             }
 
             std.debug.print("{s}\n", .{user.first_name});
