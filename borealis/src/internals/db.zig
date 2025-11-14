@@ -110,6 +110,8 @@ pub const UserDatabase = struct {
 
             const user = parsed_user.value;
 
+            try users.add(user);
+
             if (self.memtable.contains(user.id) and std.meta.eql(self.memtable.get(user.id).?, user)) {
                 const memtable_user = self.memtable.get(user.id).?;
                 _ = self.memtable.remove(memtable_user.id);
@@ -126,6 +128,10 @@ pub const UserDatabase = struct {
                 const json = try std.fmt.allocPrint(allocator, "{s}\n", .{line});
                 try writer.interface.writeAll(json);
             }
+        }
+
+        while (users.removeOrNull()) |u| {
+            std.debug.print("{d}\n", .{u.id});
         }
 
         try std.fs.cwd().deleteFile(read_file_path);
