@@ -22,7 +22,7 @@ pub fn main() !void {
     const allocator = gpa.allocator();
     defer std.debug.assert(gpa.deinit() == .ok);
 
-    var out: std.io.Writer.Allocating = .init(allocator);
+    var out: std.Io.Writer.Allocating = .init(allocator);
     try std.json.Stringify.value(user, .{}, &out.writer);
     var arr = out.toArrayList();
     defer arr.deinit(allocator);

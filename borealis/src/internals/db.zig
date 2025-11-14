@@ -68,34 +68,19 @@ pub const UserDatabase = struct {
     pub fn flush(self: *UserDatabase) !void {
         const allocator = std.heap.smp_allocator;
 
-        const read_file_path = std.fmt.allocPrint(allocator, "{s}/{s}", .{self.dir, DB_FILE}) catch |err| {
-            std.debug.print("Error creating read file path for flush: {}\n", .{err});
-            return err;
-        };
+        const read_file_path = try std.fmt.allocPrint(allocator, "{s}/{s}", .{self.dir, DB_FILE});
         defer allocator.free(read_file_path);
 
-        const read_file = std.fs.cwd().openFile(read_file_path, .{}) catch |err| {
-            std.debug.print("Error opening users db for reading: {}\n", .{err});
-            return err;
-        };
+        const read_file = try std.fs.cwd().openFile(read_file_path, .{});
         defer read_file.close();
 
-        const write_file_path = std.fmt.allocPrint(allocator, "{s}/{s}", .{self.dir, WRITE_FILE_PATH}) catch |err| {
-            std.debug.print("Error creating write file path for flush: {}\n", .{err});
-            return err;
-        };
+        const write_file_path = try std.fmt.allocPrint(allocator, "{s}/{s}", .{self.dir, WRITE_FILE_PATH});
         defer allocator.free(write_file_path);
 
-        const write_file = std.fs.cwd().createFile(write_file_path, .{}) catch |err| {
-            std.debug.print("Error creating write file for flush: {}\n", .{err});
-            return err;
-        };
+        const write_file = try std.fs.cwd().createFile(write_file_path, .{});
         defer write_file.close();
 
-        write_file.seekFromEnd(0) catch |err| {
-            std.debug.print("Error going to end of write file during flush: {}\n", .{err});
-            return err;
-        };
+        try write_file.seekFromEnd(0);
 
         var write_buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
         var writer = write_file.writer(&write_buffer);
@@ -131,16 +116,8 @@ pub const UserDatabase = struct {
             std.debug.print("{s}\n", .{user.first_name});
 
 
-            //  VERY END
-            std.fs.cwd().deleteFile(read_file_path) catch |err| {
-                std.debug.print("Error deleting read file during flush: {}\n", .{err});
-                return err;
-            };
-
-            std.fs.rename(std.fs.cwd(), write_file_path, std.fs.cwd(), read_file_path) catch |err| {
-                std.debug.print("Error renaming write file during flush: {}\n", .{err});
-                return err;
-            };
+            try std.fs.cwd().deleteFile(read_file_path);
+            try std.fs.rename(std.fs.cwd(), write_file_path, std.fs.cwd(), read_file_path);
         }
     }
 

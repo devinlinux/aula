@@ -7,7 +7,7 @@ pub fn recoverDatabase(dir: []const u8) void {
 
     var db = UserDatabase.init(allocator, dir, Mode.recover);
     db.flush() catch |err| {
-        std.debug.print("Error while flushing: {}", .{err});
+        std.debug.print("Error during flush: {}\n", .{err});
     };
     defer db.deinit();
 }
