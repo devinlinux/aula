@@ -75,6 +75,36 @@ pub const UserDatabase = struct {
         }
     }
 
+    //  TODO: binary search
+    pub fn getUser(self: *UserDatabase, id: usize) !?User {
+        if (self.memtable.get(id)) |user| {
+            return user;
+        }
+
+        const allocator = std.heap.smp_allocator;
+
+        const path = try std.fmt.allocPrint(allocator, "{s}/{s}", .{self.dir, DB_FILE});
+        defer allocator.free(path);
+
+        const file = try std.fs.cwd().openFile(path, .{});
+        defer file.close();
+
+        var buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
+        var reader = file.reader(&buffer);
+
+        while (try reader.interface.takeDelimiter('\n')) |line| {
+            const parsed_user = std.json.parseFromSlice(User, allocator, line, .{}) catch |err| {
+                std.debug.print("Error deserializing user form users db, this should never happen!: {}\n", .{err});
+                std.process.exit(1);
+            };
+
+            const user = parsed_user.value;
+            if (user.id == id) return user;
+        }
+
+        return null;
+    }
+
     pub fn flush(self: *UserDatabase) !void {
         const allocator = std.heap.smp_allocator;
 

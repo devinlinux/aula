@@ -28,6 +28,10 @@ pub fn recoverDatabase(dir: []const u8) void {
         };
     }
 
+    _ = db.getUser(5) catch |err| {
+            std.debug.print("Error during et: {}\n", .{err});
+    };
+
     db.flush() catch |err| {
         std.debug.print("Error during flush: {}\n", .{err});
     };
