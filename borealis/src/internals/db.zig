@@ -122,8 +122,6 @@ pub const UserDatabase = struct {
         }
 
         while (users.removeOrNull()) |u| {
-            std.debug.print("{d}\n", .{u.id});
-
             try std.json.Stringify.value(u, .{}, &out.writer);
             var arr = out.toArrayList();
             defer arr.deinit(allocator);
