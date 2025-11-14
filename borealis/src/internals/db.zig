@@ -109,25 +109,7 @@ pub const UserDatabase = struct {
             };
 
             const user = parsed_user.value;
-
             try users.add(user);
-
-            if (self.memtable.contains(user.id) and std.meta.eql(self.memtable.get(user.id).?, user)) {
-                const memtable_user = self.memtable.get(user.id).?;
-                _ = self.memtable.remove(memtable_user.id);
-
-                try std.json.Stringify.value(user, .{}, &out.writer);
-                var arr = out.toArrayList();
-                defer arr.deinit(allocator);
-
-                const json = try std.fmt.allocPrint(allocator, "{s}\n", .{arr.items});
-                try writer.interface.writeAll(json);
-            } else {
-                _ = self.memtable.remove(user.id);
-
-                const json = try std.fmt.allocPrint(allocator, "{s}\n", .{line});
-                try writer.interface.writeAll(json);
-            }
         }
 
         var iterator = self.memtable.iterator();
@@ -138,6 +120,15 @@ pub const UserDatabase = struct {
 
         while (users.removeOrNull()) |u| {
             std.debug.print("{d}\n", .{u.id});
+
+            try std.json.Stringify.value(u, .{}, &out.writer);
+            var arr = out.toArrayList();
+            defer arr.deinit(allocator);
+
+            const json = try std.fmt.allocPrint(allocator, "{s}\n", .{arr.items});
+            defer allocator.free(json);
+
+            try writer.interface.writeAll(json);
         }
 
         try std.fs.cwd().deleteFile(read_file_path);
