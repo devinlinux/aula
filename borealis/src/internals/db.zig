@@ -130,6 +130,12 @@ pub const UserDatabase = struct {
             }
         }
 
+        var iterator = self.memtable.iterator();
+        while (iterator.next()) |u| {
+            try users.add(u.value_ptr.*);
+            _ = self.memtable.remove(u.key_ptr.*);
+        }
+
         while (users.removeOrNull()) |u| {
             std.debug.print("{d}\n", .{u.id});
         }
