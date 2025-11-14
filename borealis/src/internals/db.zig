@@ -109,7 +109,10 @@ pub const UserDatabase = struct {
             };
 
             const user = parsed_user.value;
-            try users.add(user);
+
+            if (!self.memtable.contains(user.id)) {
+                try users.add(user);
+            }
         }
 
         var iterator = self.memtable.iterator();

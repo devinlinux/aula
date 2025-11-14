@@ -10,7 +10,7 @@ pub fn recoverDatabase(dir: []const u8) void {
     var db = UserDatabase.init(allocator, dir, Mode.recover);
     defer db.deinit();
 
-    const ids = [_]usize{1, 4, 5, 6, 9, 11};
+    const ids = [_]usize{1, 2, 4, 5, 6, 9, 11};
     for (ids) |id| {
         const user = User {
             .id = id,
@@ -18,7 +18,7 @@ pub fn recoverDatabase(dir: []const u8) void {
             .password = "hash",
             .first_name = "Michael",
             .last_name = "Bobrowski",
-            .profile_picture = "uuid",
+            .profile_picture = "UUID",
             .major = Major.computer_engineering,
             .graduation_year = 2029,
         };
