@@ -112,11 +112,6 @@ pub const UserDatabase = struct {
                 const json = try std.fmt.allocPrint(allocator, "{s}\n", .{line});
                 try writer.interface.writeAll(json);
             }
-
-            std.debug.print("{s}\n", .{user.first_name});
-
-
-            std.debug.print("{s}\n", .{read_file_path});
         }
 
         try std.fs.cwd().deleteFile(read_file_path);
