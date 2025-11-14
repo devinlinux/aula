@@ -97,11 +97,6 @@ pub const UserDatabase = struct {
             const user = parsed_user.value;
 
             if (self.memtable.contains(user.id) and std.meta.eql(self.memtable.get(user.id).?, user)) {
-                _ = self.memtable.remove(user.id);
-                //  write line to write_file
-
-            } else {
-                //  write from memtable to write_file
                 const memtable_user = self.memtable.get(user.id).?;
                 _ = self.memtable.remove(memtable_user.id);
 
@@ -111,14 +106,21 @@ pub const UserDatabase = struct {
 
                 const json = try std.fmt.allocPrint(allocator, "{s}\n", .{arr.items});
                 try writer.interface.writeAll(json);
+            } else {
+                _ = self.memtable.remove(user.id);
+
+                const json = try std.fmt.allocPrint(allocator, "{s}\n", .{line});
+                try writer.interface.writeAll(json);
             }
 
             std.debug.print("{s}\n", .{user.first_name});
 
 
-            try std.fs.cwd().deleteFile(read_file_path);
-            try std.fs.rename(std.fs.cwd(), write_file_path, std.fs.cwd(), read_file_path);
+            std.debug.print("{s}\n", .{read_file_path});
         }
+
+        try std.fs.cwd().deleteFile(read_file_path);
+        try std.fs.rename(std.fs.cwd(), write_file_path, std.fs.cwd(), read_file_path);
     }
 
     //  TODO: flush if at max size
