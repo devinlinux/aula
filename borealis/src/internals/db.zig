@@ -110,6 +110,18 @@ pub const UserDatabase = struct {
             }
 
             std.debug.print("{s}\n", .{user.first_name});
+
+
+            //  VERY END
+            std.fs.cwd().deleteFile(read_file_path) catch |err| {
+                std.debug.print("Error deleting read file during flush: {}\n", .{err});
+                return err;
+            };
+
+            std.fs.rename(std.fs.cwd(), write_file_path, std.fs.cwd(), read_file_path) catch |err| {
+                std.debug.print("Error renaming write file during flush: {}\n", .{err});
+                return err;
+            };
         }
     }
 
