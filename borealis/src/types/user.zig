@@ -1,3 +1,4 @@
+const Order = @import("std").math.Order;
 const Major = @import("major.zig").Major;
 
 pub const User = struct {
@@ -10,3 +11,11 @@ pub const User = struct {
     major: Major,
     graduation_year: i16,
 };
+
+pub fn compareUser(context: void, user1: User, user2: User) Order {
+    _ = context;
+
+    if (user1.id < user2.id) return .lt;
+    if (user1.id > user2.id) return .gt;
+    return .eq;
+}

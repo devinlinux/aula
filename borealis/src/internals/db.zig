@@ -1,5 +1,7 @@
 const std = @import("std");
+const PriorityQueue = std.PriorityQueue;
 const User = @import("../types/user.zig").User;
+const compareUser = @import("../types/user.zig").compareUser;
 
 const DB_FILE: []const u8 = "users.db";
 const WRITE_FILE_PATH: []const u8 = "users_flush.db";
@@ -65,6 +67,14 @@ pub const UserDatabase = struct {
         self.memtable.deinit();
     }
 
+    pub fn insertUser(self: *UserDatabase, user: User) !void {
+        try self.memtable.put(user.id, user);
+
+        if (self.memtable.count() >= MEMTABLE_MAX_SIZE) {
+            try self.flush();
+        }
+    }
+
     pub fn flush(self: *UserDatabase) !void {
         const allocator = std.heap.smp_allocator;
 
@@ -86,8 +96,12 @@ pub const UserDatabase = struct {
         var writer = write_file.writer(&write_buffer);
         var out: std.Io.Writer.Allocating = .init(allocator);
 
-        var buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
-        var reader = read_file.reader(&buffer);
+        var read_buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
+        var reader = read_file.reader(&read_buffer);
+
+        var users = PriorityQueue(User, void, compareUser).init(allocator, undefined);
+        defer users.deinit();
+
         while (try reader.interface.takeDelimiter('\n')) |line| {
             const parsed_user = std.json.parseFromSlice(User, allocator, line, .{}) catch |err| {
                 std.debug.print("Error deserializing user from users db, this should not happen!: {}\n", .{err});
@@ -116,10 +130,5 @@ pub const UserDatabase = struct {
 
         try std.fs.cwd().deleteFile(read_file_path);
         try std.fs.rename(std.fs.cwd(), write_file_path, std.fs.cwd(), read_file_path);
-    }
-
-    //  TODO: flush if at max size
-    pub fn insertUser(self: *UserDatabase, user: User) void {
-        self.memtable.put(user.id, user);
     }
 };
