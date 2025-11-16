@@ -130,7 +130,7 @@ pub const UserDatabase = struct {
 
         while (try reader.interface.takeDelimiter('\n')) |line| {
             const parsed_user = std.json.parseFromSlice(User, allocator, line, .{}) catch |err| {
-                std.debug.print("Error deserializing user from users db, this should not happen!: {}\n", .{err});
+                std.debug.print("Error deserializing user from users db, this should never happen!: {}\n", .{err});
                 std.process.exit(1);
             };
 
