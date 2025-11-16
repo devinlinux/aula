@@ -40,7 +40,9 @@ pub fn recoverDatabase(dir: []const u8) void {
         std.debug.print("Error during flush: {}\n", .{err});
     };
 
-    repl(db);
+    repl(db) catch |err| {
+        std.debug.print("Error during repl: {}\n", .{err});
+    };
 }
 
 pub fn newDatabase(dir: []const u8) void {
@@ -49,23 +51,23 @@ pub fn newDatabase(dir: []const u8) void {
     var db = UserDatabase.init(allocator, dir, Mode.new);
     defer db.deinit();
 
-    repl(db);
+    repl(db) catch |err| {
+        std.debug.print("Error during repl: {}\n", .{err});
+    };
 }
 
-fn repl(db: UserDatabase) void {
+fn repl(db: UserDatabase) !void {
     var stdin_buffer: [1024]u8 = undefined;
     var stdin = std.fs.File.stdin().reader(&stdin_buffer);
 
-    var line_buffer: [1024]u8 = undefined;
-    var writer: std.Io.Writer = .fixed(&line_buffer);
+    //var line_buffer: [1024]u8 = undefined;
+    //var writer: std.Io.Writer = .fixed(&line_buffer);
 
-    const line_len = stdin.interface.streamDelimiterLimit(&writer, '\n', .unlimited) catch |err| {
-        std.debug.print("Error when reading in from stdin: {}\n", .{err});
-        std.process.exit(1);
-    };
-    const input = line_buffer[0..line_len];
+    while (true) {
+        const line = try stdin.interface.takeDelimiter('\n');
 
-    if (std.mem.eql(u8, CMD_ADD_USER, input)) {
-        _ = db;
+        std.debug.print("{s}\n", .{line.?});
     }
+
+    _ = db;
 }
