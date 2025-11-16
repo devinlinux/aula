@@ -45,7 +45,7 @@ pub fn recoverDatabase(dir: []const u8) void {
         std.debug.print("Error during flush: {}\n", .{err});
     };
 
-    repl(allocator, user_db) catch |err| {
+    repl(allocator, &user_db) catch |err| {
         std.debug.print("Error during repl: {}\n", .{err});
     };
 }
@@ -56,12 +56,12 @@ pub fn newDatabase(dir: []const u8) void {
     var user_db = UserDatabase.init(allocator, dir, Mode.new);
     defer user_db.deinit();
 
-    repl(allocator, user_db) catch |err| {
+    repl(allocator, &user_db) catch |err| {
         std.debug.print("Error during repl: {}\n", .{err});
     };
 }
 
-fn repl(allocator: std.mem.Allocator, user_db: UserDatabase) !void {
+fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase) !void {
     var stdin_buffer: [1024]u8 = undefined;
     var stdin = std.fs.File.stdin().reader(&stdin_buffer);
 
@@ -78,7 +78,7 @@ fn repl(allocator: std.mem.Allocator, user_db: UserDatabase) !void {
             };
 
             const user = parsed_user.value;
-            try user_db.insertUser(user);
+            try user_db.*.insertUser(user);
         } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input)) {
 
         } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input)) {
