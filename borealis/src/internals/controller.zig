@@ -5,8 +5,12 @@ const UserDatabase = @import("user_db.zig").UserDatabase;
 const Mode = @import("mode.zig").Mode;
 
 const CMD_END: []const u8 = "END";
-const CMD_ADD_USER: []const u8 = "add_user";  //  user_json
-const CMD_VALID_PASSWORD: []const u8 = "password";  //  id hash
+const CMD_CREATE_USER: []const u8 = "create_user";  //  user_json
+const CMD_VALID_PASSWORD: []const u8 = "verify_password";  //  id hash
+const CMD_ADD_USER_TO_GROUP: []const u8 = "add_to_group";  //  user_name or id            |  Maybe use new type to that has id
+const CMD_REMOVE_USER_FROM_GROUP: []const u8 = "remove_from_group";  //  user_name or id  |  and name
+const CMD_GET_USER: []const u8 = "get_user";  //  id
+const CMD_GET_GROUP: []const u8 = "get_groups";  //  returns all groups
 
 pub fn recoverDatabase(dir: []const u8) void {
     const allocator = std.heap.smp_allocator;
@@ -60,13 +64,13 @@ fn repl(db: UserDatabase) !void {
     var stdin_buffer: [1024]u8 = undefined;
     var stdin = std.fs.File.stdin().reader(&stdin_buffer);
 
-    //var line_buffer: [1024]u8 = undefined;
-    //var writer: std.Io.Writer = .fixed(&line_buffer);
-
     while (true) {
         const line = try stdin.interface.takeDelimiter('\n');
+        const input = line.?;
 
-        std.debug.print("{s}\n", .{line.?});
+        if (std.mem.eql(u8, CMD_END, input)) {
+            break;
+        }
     }
 
     _ = db;
