@@ -13,6 +13,9 @@ const CMD_GET_USER: []const u8 = "get_user";  //  id
 const CMD_GET_GROUP: []const u8 = "get_group";  //  id
 const CMD_GET_GROUPS: []const u8 = "get_groups";  //  returns all groups
 
+const CODE_SUCCESS: []const u8 = "SUCCESS";
+const CODE_FAILURE: []const u8 = "FAILURE";
+
 pub fn recoverDatabase(dir: []const u8) void {
     const allocator = std.heap.smp_allocator;
 
@@ -67,29 +70,40 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase) !void {
 
     while (true) {
         const line = try stdin.interface.takeDelimiter('\n');
-        const input = line.?;
+        var input = std.mem.splitScalar(u8, line.?, ' ');
 
-        if (std.mem.eql(u8, CMD_END, input)) {
+        var input_list = std.array_list.Managed([]const u8).init(allocator);
+        defer input_list.deinit();
+
+        while (input.next()) |part| {
+            try input_list.append(part);
+        }
+
+        if (std.mem.eql(u8, CMD_END, input_list.items[0])) {
             break;
-        } else if (std.mem.eql(u8, CMD_CREATE_USER, input)) {
-            const parsed_user = std.json.parseFromSlice(User, allocator, input, .{}) catch |err| {
+        } else if (std.mem.eql(u8, CMD_CREATE_USER, input_list.items[0])) {
+            const parsed_user = std.json.parseFromSlice(User, allocator, input_list.items[0], .{}) catch |err| {
                 std.debug.print("Error deserializing user from input, this should never happen!: {}\n", .{err});
                 std.process.exit(1);
             };
 
             const user = parsed_user.value;
-            try user_db.*.insertUser(user);
-        } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input)) {
+            user_db.*.insertUser(user) catch |err| {
+                std.debug.print("{s}\n", .{CODE_FAILURE});
+                return err;
+            };
+            std.debug.print("{s}\n", .{CODE_SUCCESS});
+        } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input_list.items[0])) {
 
-        } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input)) {
+        } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input_list.items[0])) {
 
-        } else if (std.mem.eql(u8, CMD_REMOVE_USER_FROM_GROUP, input)) {
+        } else if (std.mem.eql(u8, CMD_REMOVE_USER_FROM_GROUP, input_list.items[0])) {
 
-        } else if (std.mem.eql(u8, CMD_GET_USER, input)) {
+        } else if (std.mem.eql(u8, CMD_GET_USER, input_list.items[0])) {
 
-        } else if (std.mem.eql(u8, CMD_GET_GROUP, input)) {
+        } else if (std.mem.eql(u8, CMD_GET_GROUP, input_list.items[0])) {
 
-        } else if (std.mem.eql(u8, CMD_GET_GROUPS, input)) {
+        } else if (std.mem.eql(u8, CMD_GET_GROUPS, input_list.items[0])) {
 
         } else {
 
