@@ -10,12 +10,12 @@ pub const User = struct {
     profile_picture: []const u8,  //  max 32 chars
     major: Major,
     graduation_year: i16,
+
+    pub fn compareUser(context: void, user1: User, user2: User) Order {
+        _ = context;
+
+        if (user1.id < user2.id) return .lt;
+        if (user1.id > user2.id) return .gt;
+        return .eq;
+    }
 };
-
-pub fn compareUser(context: void, user1: User, user2: User) Order {
-    _ = context;
-
-    if (user1.id < user2.id) return .lt;
-    if (user1.id > user2.id) return .gt;
-    return .eq;
-}

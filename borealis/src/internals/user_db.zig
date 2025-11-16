@@ -2,7 +2,6 @@ const std = @import("std");
 const PriorityQueue = std.PriorityQueue;
 const User = @import("../types/user.zig").User;
 const Mode = @import("mode.zig").Mode;
-const compareUser = @import("../types/user.zig").compareUser;
 
 const DB_FILE: []const u8 = "users.db";
 const WRITE_FILE_PATH: []const u8 = "users_flush.db";
@@ -19,7 +18,7 @@ pub const UserDatabase = struct {
         const exists = stat != null and stat.?.kind == .directory;
 
         const file_path = std.fmt.allocPrint(allocator, "{s}/{s}", .{dir, DB_FILE}) catch |err| {
-            std.debug.print("Error creating file path for database: {}", .{err});
+            std.debug.print("Error creating file path for database: {}\n", .{err});
             std.process.exit(1);
         };
         defer allocator.free(file_path);
@@ -32,7 +31,7 @@ pub const UserDatabase = struct {
                         std.process.exit(1);
                     };
                 } else {
-                    std.debug.print("Directory {s} already exists, perhaps try recovering", .{dir});
+                    std.debug.print("Directory {s} already exists, perhaps try recovering\n", .{dir});
                     std.process.exit(1);
                 }
 
@@ -41,16 +40,14 @@ pub const UserDatabase = struct {
                     std.process.exit(1);
                 };
                 defer file.close();
-
             },
             .recover => {
                 if (!exists) {
-                    std.debug.print("Directory {s} for recovery does not exist", .{dir});
+                    std.debug.print("Directory {s} for recovery does not exist\n", .{dir});
                     std.process.exit(1);
                 }
             },
         }
-
 
         return UserDatabase {
             .memtable = std.AutoHashMap(usize, User).init(allocator),
@@ -125,7 +122,7 @@ pub const UserDatabase = struct {
         var read_buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
         var reader = read_file.reader(&read_buffer);
 
-        var users = PriorityQueue(User, void, compareUser).init(allocator, undefined);
+        var users = PriorityQueue(User, void, User.compareUser).init(allocator, undefined);
         defer users.deinit();
 
         while (try reader.interface.takeDelimiter('\n')) |line| {
