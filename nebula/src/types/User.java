@@ -1,6 +1,6 @@
 package types;
 
-public class User implements Comparable<User> {
+public class User implements Identifiable, Comparable<User> {
     private final Long id;
     private final String email;
     private final String firstName;
