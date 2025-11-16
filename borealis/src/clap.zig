@@ -1,8 +1,6 @@
 const std = @import("std");
 const borealis = @import("borealis");
 const controller = @import("internals/controller.zig");
-const UserDatabase = @import("internals/db.zig").UserDatabase;
-const Mode = @import("internals/db.zig").Mode;
 
 const commands = [_][]const u8 {
     "-h", "--help",
@@ -49,10 +47,10 @@ pub fn evaluateArgs(args: *std.process.ArgIterator) void {
 fn help() void {
     std.debug.print("Borealis {s}\n", .{borealis.VERSION});
     std.debug.print("Commands:\n", .{});
-    std.debug.print("-h, --help:          print available commands\n", .{});
-    std.debug.print("-v, --version:       display the version\n", .{});
-    std.debug.print("-r, --recover {{dir}}: run using data stored in dir\n", .{});
-    std.debug.print("-n, --new {{dir}}:     create a new database using dir\n", .{});
+    std.debug.print("-h, --help:          \tprint available commands\n", .{});
+    std.debug.print("-v, --version:       \tdisplay the version\n", .{});
+    std.debug.print("-r, --recover {{dir}}: \trun using data stored in dir\n", .{});
+    std.debug.print("-n, --new {{dir}}:     \tcreate a new database using dir\n", .{});
 }
 
 fn version() void {
