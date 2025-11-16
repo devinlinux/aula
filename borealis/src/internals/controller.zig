@@ -2,7 +2,7 @@ const std = @import("std");
 const User = @import("../types/user.zig").User;
 const Major = @import("../types/major.zig").Major;
 const UserDatabase = @import("user_db.zig").UserDatabase;
-const Mode = @import("user_db.zig").Mode;
+const Mode = @import("mode.zig").Mode;
 
 const CMD_END: []const u8 = "END";
 const CMD_ADD_USER: []const u8 = "add_user";  //  user_json

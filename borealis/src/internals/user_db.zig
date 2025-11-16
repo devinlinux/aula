@@ -1,17 +1,13 @@
 const std = @import("std");
 const PriorityQueue = std.PriorityQueue;
 const User = @import("../types/user.zig").User;
+const Mode = @import("mode.zig").Mode;
 const compareUser = @import("../types/user.zig").compareUser;
 
 const DB_FILE: []const u8 = "users.db";
 const WRITE_FILE_PATH: []const u8 = "users_flush.db";
 const MAX_LINE_LENGTH: usize = 312;
 const MEMTABLE_MAX_SIZE: usize = 100_000;
-
-pub const Mode = enum {
-    new,
-    recover,
-};
 
 pub const UserDatabase = struct {
     memtable: std.AutoHashMap(usize, User),
