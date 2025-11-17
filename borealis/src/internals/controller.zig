@@ -245,7 +245,27 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(user.?, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_GROUP, input_list.items[0])) {
+            if (input_list.items.len < 2) {
+                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
 
+            const group_id = try std.fmt.parseInt(usize, input_list.items[1], 10);
+            const group = try group_db.getGroup(group_id);
+
+            if (group != null) {
+                const msg = Message {
+                    .result = .failure,
+                    .message = "Group not found",
+                };
+
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
+            }
+
+            try std.json.Stringify.value(group.?, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_GROUPS, input_list.items[0])) {
 
         } else {
