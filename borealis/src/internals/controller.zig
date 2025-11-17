@@ -277,7 +277,16 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(group.?, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_GROUPS, input_list.items[0])) {
+            var groups = std.array_list.Managed(Group).init(allocator);
+            defer groups.deinit();
+            var id: usize = 0;
+            while (try group_db.getGroup(id)) |group| {
+                try groups.append(group);
+                id += 1;
+            }
 
+            try std.json.Stringify.value(groups.items, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
         } else {
             std.debug.print("Unknown command, this should never happen\n", .{});
             std.process.exit(1);
