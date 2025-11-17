@@ -10,7 +10,6 @@ pub const User = struct {
     password: []const u8,  // max 64 chars
     first_name: []const u8,  //  max 15 chars
     last_name: []const u8,  //  max 15 chars
-    profile_picture: []const u8,  //  max 32 chars
     major: Major,
     graduation_year: i16,
     groups: std.ArrayList(StrippedGroup),
