@@ -4,8 +4,6 @@ use std::sync::{ Arc, Mutex };
 use actix_web::dev::Server;
 use actix_web::{ web, App, HttpServer };
 
-use crate::db::UserDatabase;
-
 const MAX_SIZE: usize = 4096;
 
 pub struct WebServer;
@@ -17,21 +15,10 @@ pub enum ServerMode {
 
 impl WebServer {
     pub fn run(listener: TcpListener, mode: ServerMode, dir: &str) -> std::io::Result<Server> {
-        let user_db = match mode {
-            ServerMode::Genesis => {
-                UserDatabase::new(dir)?
-            },
-            ServerMode::Recovery => {
-                UserDatabase::recover(dir)?
-            },
-        };
-
-        let user_db = Arc::new(Mutex::new(user_db));
         let num_users = Arc::new(Mutex::new(0usize));
 
         let server = HttpServer::new(move || {
             App::new()
-                .app_data(web::Data::new(user_db.clone()))
                 .app_data(web::Data::new(num_users.clone()))
                 .app_data(web::JsonConfig::default().limit(MAX_SIZE))
                 .wrap(
