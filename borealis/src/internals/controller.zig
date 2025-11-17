@@ -116,7 +116,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input_list.items[0])) {
             if (input_list.items.len < 3) {
-                std.debug.print("Expected 3 arguments, got {d}\n", .{input_list.items.len});
+                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
 
@@ -152,7 +152,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             }
         } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input_list.items[0])) {
             if (input_list.items.len < 3) {
-                std.debug.print("Expected 3 arguments, got {d}\n", .{input_list.items.len});
+                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
 
@@ -188,7 +188,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_REMOVE_USER_FROM_GROUP, input_list.items[0])) {
             if (input_list.items.len < 3) {
-                std.debug.print("Expected 3 arguments, got {d}\n", .{input_list.items.len});
+                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
 
@@ -224,7 +224,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_USER, input_list.items[0])) {
             if (input_list.items.len < 2) {
-                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
+                std.debug.print("Expected 1 argument, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
 
@@ -246,7 +246,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_GROUP, input_list.items[0])) {
             if (input_list.items.len < 2) {
-                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
+                std.debug.print("Expected 1 argument, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
 
