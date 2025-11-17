@@ -27,32 +27,6 @@ pub fn recoverDatabase(dir: []const u8) void {
     var group_db = GroupDatabase.init(allocator, dir, Mode.recover);
     defer group_db.deinit();
 
-    const ids = [_]usize{1, 2, 4, 5, 6, 9, 11};
-    for (ids) |id| {
-        const user = User {
-            .id = id,
-            .email = "mbobrows@villanova.edu",
-            .password = "hash",
-            .first_name = "Michael",
-            .last_name = "Bobrowski",
-            .profile_picture = "UUID",
-            .major = Major.computer_engineering,
-            .graduation_year = 2029,
-        };
-
-        user_db.insertUser(user) catch |err| {
-            std.debug.print("Error while inserting user {d}: {}\n", .{id, err});
-        };
-    }
-
-    _ = user_db.getUser(5) catch |err| {
-            std.debug.print("Error during get: {}\n", .{err});
-    };
-
-    user_db.flush() catch |err| {
-        std.debug.print("Error during flush: {}\n", .{err});
-    };
-
     repl(allocator, &user_db, &group_db) catch |err| {
         std.debug.print("Error during repl: {}\n", .{err});
     };
