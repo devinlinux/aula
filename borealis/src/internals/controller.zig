@@ -91,7 +91,26 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
 
             std.debug.print("{s}\n", .{CODE_SUCCESS});
         } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input_list.items[0])) {
+            std.debug.print("PWD\n", .{});
+            if (input_list.items.len < 3) {
+                std.debug.print("Expected 3 arguments, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
 
+            const id = try std.fmt.parseInt(usize, input_list.items[1], 10);
+            const hash = input_list.items[2];
+
+            const user = try user_db.getUser(id);
+            if (user == null) {
+                std.debug.print("User not found\n", .{});
+                continue;
+            }
+
+            if (std.mem.eql(u8, hash, user.?.password)) {
+                std.debug.print("{s}\n", .{CODE_SUCCESS});
+            } else {
+                std.debug.print("{s}\n", .{CODE_FAILURE});
+            }
         } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input_list.items[0])) {
 
         } else if (std.mem.eql(u8, CMD_REMOVE_USER_FROM_GROUP, input_list.items[0])) {
