@@ -5,6 +5,7 @@ use actix_web::dev::Server;
 use actix_web::{ web, App, HttpServer };
 
 const USER_COUNT_FILE: &str = "user_count.dat";
+const GROUP_COUNT_FILE: &str = "group_count.dat";
 const MAX_SIZE: usize = 4096;
 
 pub struct WebServer;
@@ -39,14 +40,16 @@ impl WebServer {
     }
 }
 
-fn read_num_users(dir: &str) -> std::io::Result<usize> {
-    let contents = std::fs::read_to_string(format!("{}/{}", dir, USER_COUNT_FILE))?;
+fn read_num(dir: &str, users: bool) -> std::io::Result<usize> {
+    let file = if users { USER_COUNT_FILE } else { GROUP_COUNT_FILE };
+    let contents = std::fs::read_to_string(format!("{}/{}", dir, file))?;
     let num = contents.trim().parse::<usize>()
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
     Ok(num)
 }
 
-fn write_num_users(dir: &str, num_users: usize) -> std::io::Result<()> {
-    std::fs::write(format!("{}/{}", dir, USER_COUNT_FILE), num_users.to_string())?;
+fn write_num(dir: &str, num: usize, users: bool) -> std::io::Result<()> {
+    let file = if users { USER_COUNT_FILE } else { GROUP_COUNT_FILE };
+    std::fs::write(format!("{}/{}", dir, file), num.to_string())?;
     Ok(())
 }
