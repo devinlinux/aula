@@ -12,11 +12,12 @@ const CMD_END: []const u8 = "END";
 const CMD_CREATE_USER: []const u8 = "create_user";  //  user_json
 const CMD_CREATE_GROUP: []const u8 = "create_group";  //  group_json
 const CMD_VALID_PASSWORD: []const u8 = "verify_password";  //  id hash
-const CMD_ADD_USER_TO_GROUP: []const u8 = "add_to_group";  //  user_name or id            |  Maybe use new type to that has id | user_id and group_id
-const CMD_REMOVE_USER_FROM_GROUP: []const u8 = "remove_from_group";  //  user_name or id  |  and name                          | user_id and group_id
+const CMD_ADD_USER_TO_GROUP: []const u8 = "add_to_group";  //  user_id group_id
+const CMD_REMOVE_USER_FROM_GROUP: []const u8 = "remove_from_group";  //  user_id group_id
 const CMD_GET_USER: []const u8 = "get_user";  //  id
 const CMD_GET_GROUP: []const u8 = "get_group";  //  id
 const CMD_GET_GROUPS: []const u8 = "get_groups";  //  returns all groups
+const CMD_CHANGE_PASSWORD: []const u8 = "change_password";
 
 const CODE_SUCCESS: []const u8 = "SUCCESS";
 const CODE_FAILURE: []const u8 = "FAILURE";
@@ -243,7 +244,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             const user_id = try std.fmt.parseInt(usize, input_list.items[1], 10);
             const user = try user_db.getUser(user_id);
 
-            if (user != null) {
+            if (user == null) {
                 const msg = Message {
                     .result = .failure,
                     .message = "User not found",
@@ -265,7 +266,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             const group_id = try std.fmt.parseInt(usize, input_list.items[1], 10);
             const group = try group_db.getGroup(group_id);
 
-            if (group != null) {
+            if (group == null) {
                 const msg = Message {
                     .result = .failure,
                     .message = "Group not found",
@@ -288,6 +289,35 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             }
 
             try std.json.Stringify.value(groups.items, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
+        } else if (std.mem.eql(u8, CMD_CHANGE_PASSWORD, input_list.items[0])) {
+            if (input_list.items.len != 3) {
+                std.debug.print("Expected 2 argument, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
+
+            const user_id = try std.fmt.parseInt(usize, input_list.items[1], 10);
+            var user = try user_db.getUser(user_id);
+
+            if (user == null) {
+                const msg = Message {
+                    .result = .failure,
+                    .message = "User not found",
+                };
+
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
+            }
+
+            user.?.password = input_list.items[2];
+            try user_db.insertUser(user.?);
+
+            const msg = Message {
+                .result = .success,
+                .message = "Password changed successfully",
+            };
+            try std.json.Stringify.value(msg, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else {
             std.debug.print("Unknown command, this should never happen\n", .{});
