@@ -69,7 +69,12 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
         if (std.mem.eql(u8, CMD_END, input_list.items[0])) {
             break;
         } else if (std.mem.eql(u8, CMD_CREATE_USER, input_list.items[0])) {
-            const parsed_user = std.json.parseFromSlice(User, allocator, input_list.items[0], .{}) catch |err| {
+            if (input_list.items.len != 2) {
+                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
+
+            const parsed_user = std.json.parseFromSlice(User, allocator, input_list.items[1], .{}) catch |err| {
                 std.debug.print("Error deserializing user from input, this should never happen!: {}\n", .{err});
                 std.process.exit(1);
             };
@@ -92,7 +97,12 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(msg, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_CREATE_GROUP, input_list.items[0])) {
-            const parsed_group = std.json.parseFromSlice(Group, allocator, input_list.items[0], .{}) catch |err| {
+            if (input_list.items.len != 2) {
+                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
+
+            const parsed_group = std.json.parseFromSlice(Group, allocator, input_list.items[1], .{}) catch |err| {
                 std.debug.print("Error deserializing group from input, this should never happen!: {}\n", .{err});
                 std.process.exit(1);
             };
@@ -115,7 +125,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(msg, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input_list.items[0])) {
-            if (input_list.items.len < 3) {
+            if (input_list.items.len != 3) {
                 std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
@@ -151,7 +161,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
                 continue;
             }
         } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input_list.items[0])) {
-            if (input_list.items.len < 3) {
+            if (input_list.items.len != 3) {
                 std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
@@ -187,7 +197,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(msg, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_REMOVE_USER_FROM_GROUP, input_list.items[0])) {
-            if (input_list.items.len < 3) {
+            if (input_list.items.len != 3) {
                 std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
@@ -223,7 +233,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(msg, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_USER, input_list.items[0])) {
-            if (input_list.items.len < 2) {
+            if (input_list.items.len != 2) {
                 std.debug.print("Expected 1 argument, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
@@ -245,7 +255,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(user.?, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_GROUP, input_list.items[0])) {
-            if (input_list.items.len < 2) {
+            if (input_list.items.len != 2) {
                 std.debug.print("Expected 1 argument, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
             }
