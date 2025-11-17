@@ -67,6 +67,8 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
         var out: std.Io.Writer.Allocating = .init(allocator);
 
         if (std.mem.eql(u8, CMD_END, input_list.items[0])) {
+            try user_db.flush();
+            try group_db.flush();
             break;
         } else if (std.mem.eql(u8, CMD_CREATE_USER, input_list.items[0])) {
             if (input_list.items.len != 2) {
