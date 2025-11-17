@@ -5,6 +5,8 @@ const Major = @import("../types/major.zig").Major;
 const UserDatabase = @import("user_db.zig").UserDatabase;
 const GroupDatabase = @import("group_db.zig").GroupDatabase;
 const Mode = @import("mode.zig").Mode;
+const Message = @import("message.zig").Message;
+const Result = @import("message.zig").Result;
 
 const CMD_END: []const u8 = "END";
 const CMD_CREATE_USER: []const u8 = "create_user";  //  user_json
@@ -62,6 +64,8 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try input_list.append(part);
         }
 
+        var out: std.Io.Writer.Allocating = .init(allocator);
+
         if (std.mem.eql(u8, CMD_END, input_list.items[0])) {
             break;
         } else if (std.mem.eql(u8, CMD_CREATE_USER, input_list.items[0])) {
@@ -71,12 +75,21 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             };
 
             const user = parsed_user.value;
-            user_db.*.insertUser(user) catch |err| {
-                std.debug.print("{s}\n", .{CODE_FAILURE});
-                return err;
+            user_db.*.insertUser(user) catch {
+                const msg = Message {
+                    .result = .failure,
+                    .message = "Failed to create user",
+                };
+                std.debug.print("{s}\n", .{out.toArrayList().items});
+                try std.json.Stringify.value(msg, .{}, &out.writer);
             };
 
-            std.debug.print("{s}\n", .{CODE_SUCCESS});
+            const msg = Message {
+                .result = .success,
+                .message = "Successfully created user",
+            };
+            try std.json.Stringify.value(msg, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_CREATE_GROUP, input_list.items[0])) {
             const parsed_group = std.json.parseFromSlice(Group, allocator, input_list.items[0], .{}) catch |err| {
                 std.debug.print("Error deserializing group from input, this should never happen!: {}\n", .{err});
@@ -84,14 +97,22 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             };
 
             const group = parsed_group.value;
-            group_db.*.insertGroup(group) catch |err| {
-                std.debug.print("{s}\n", .{CODE_FAILURE});
-                return err;
+            group_db.*.insertGroup(group) catch {
+                const msg = Message {
+                    .result = .failure,
+                    .message = "Failed to create group",
+                };
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
             };
 
-            std.debug.print("{s}\n", .{CODE_SUCCESS});
+            const msg = Message {
+                .result = .success,
+                .message = "Successfully created group",
+            };
+            try std.json.Stringify.value(msg, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input_list.items[0])) {
-            std.debug.print("PWD\n", .{});
             if (input_list.items.len < 3) {
                 std.debug.print("Expected 3 arguments, got {d}\n", .{input_list.items.len});
                 std.process.exit(1);
@@ -102,14 +123,28 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
 
             const user = try user_db.getUser(id);
             if (user == null) {
-                std.debug.print("User not found\n", .{});
-                continue;
+                const msg = Message {
+                    .result = .failure,
+                    .message = "Username or password incorrect",
+                };
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
             }
 
             if (std.mem.eql(u8, hash, user.?.password)) {
-                std.debug.print("{s}\n", .{CODE_SUCCESS});
+                const msg = Message {
+                    .result = .success,
+                    .message = "Successfully logged in",
+                };
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
             } else {
-                std.debug.print("{s}\n", .{CODE_FAILURE});
+                const msg = Message {
+                    .result = .failure,
+                    .message = "Username or password incorrect",
+                };
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
             }
         } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input_list.items[0])) {
 
