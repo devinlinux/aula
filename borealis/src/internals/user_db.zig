@@ -106,6 +106,7 @@ pub const UserDatabase = struct {
         }
 
         try usr.?.addGroup(group);
+        try self.insertUser(usr.?);
         return true;
     }
 
