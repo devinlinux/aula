@@ -25,7 +25,7 @@ pub const Group = struct {
         self.members.deinit();
     }
 
-    pub fn addUser(self: *Group, user: User) void {
+    pub fn addUser(self: *Group, user: User) !void {
         const allocator = std.heap.smp_allocator;
         const full_name = std.fmt.allocPrint(allocator, "{s} {s}", .{user.first_name, user.last_name}) catch |err| {
             std.debug.print("Error creating full name for user: {}\n", .{err});
@@ -33,7 +33,7 @@ pub const Group = struct {
         };
 
         const stripped = StrippedUser{ .id = user.id, .full_name = full_name };
-        self.members.append(stripped);
+        try self.members.append(stripped);
     }
 
     pub fn compareGroup(context: void, group1: Group, group2: Group) Order {

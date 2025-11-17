@@ -1,12 +1,13 @@
 const std = @import("std");
 const PriorityQueue = std.PriorityQueue;
 const User = @import("../types/user.zig").User;
+const Group = @import("../types/group.zig").Group;
 const Mode = @import("mode.zig").Mode;
 
 const DB_FILE: []const u8 = "users.db";
 const WRITE_FILE_PATH: []const u8 = "users_flush.db";
-const MAX_LINE_LENGTH: usize = 312;
-const MEMTABLE_MAX_SIZE: usize = 100_000;
+const MAX_LINE_LENGTH: usize = 1024 * 1024;
+const MEMTABLE_MAX_SIZE: usize = 10_000;
 
 pub const UserDatabase = struct {
     memtable: std.AutoHashMap(usize, User),
@@ -82,7 +83,7 @@ pub const UserDatabase = struct {
         const file = try std.fs.cwd().openFile(path, .{});
         defer file.close();
 
-        var buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
+        var buffer: [MAX_LINE_LENGTH]u8 = undefined;
         var reader = file.reader(&buffer);
 
         while (try reader.interface.takeDelimiter('\n')) |line| {
@@ -96,6 +97,16 @@ pub const UserDatabase = struct {
         }
 
         return null;
+    }
+
+    pub fn addUserToGroup(self: *UserDatabase, user: usize, group: Group) !bool {
+        var usr = try self.getUser(user);
+        if (!usr) {
+            return false;
+        }
+
+        try usr.?.addGroup(group);
+        return true;
     }
 
     pub fn flush(self: *UserDatabase) !void {
@@ -115,11 +126,11 @@ pub const UserDatabase = struct {
 
         try write_file.seekFromEnd(0);
 
-        var write_buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
+        var write_buffer: [MAX_LINE_LENGTH]u8 = undefined;
         var writer = write_file.writer(&write_buffer);
         var out: std.Io.Writer.Allocating = .init(allocator);
 
-        var read_buffer: [MAX_LINE_LENGTH + 1]u8 = undefined;
+        var read_buffer: [MAX_LINE_LENGTH]u8 = undefined;
         var reader = read_file.reader(&read_buffer);
 
         var users = PriorityQueue(User, void, User.compareUser).init(allocator, undefined);

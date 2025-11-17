@@ -2,6 +2,7 @@ const std = @import("std");
 const PriorityQueue = std.PriorityQueue;
 const Group = @import("../types/group.zig").Group;
 const Mode = @import("mode.zig").Mode;
+const User = @import("../types/user.zig").User;
 
 const DB_FILE: []const u8 = "groups.db";
 const WRITE_FILE_PATH: []const u8 = "groups_flush.db";
@@ -97,6 +98,16 @@ pub const GroupDatabase = struct {
         }
 
         return null;
+    }
+
+    pub fn addToGroup(self: *GroupDatabase, group: usize, user: User) !bool {
+        var grp = try self.getGroup(group);
+        if (!grp) {
+            return false;
+        }
+
+        try grp.?.addUser(user);
+        return true;
     }
 
     pub fn flush(self: *GroupDatabase) !void {

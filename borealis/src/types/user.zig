@@ -1,5 +1,8 @@
-const Order = @import("std").math.Order;
+const std = @import("std");
+const Order = std.math.Order;
 const Major = @import("major.zig").Major;
+const Group = @import("group.zig").Group;
+const StrippedGroup = @import("stripped_group.zig").StrippedGroup;
 
 pub const User = struct {
     id: usize,
@@ -10,6 +13,12 @@ pub const User = struct {
     profile_picture: []const u8,  //  max 32 chars
     major: Major,
     graduation_year: i16,
+    groups: std.ArrayList(Group),
+
+    pub fn addGroup(self: *User, group: Group) !void {
+        const grp = StrippedGroup { .id = group.id, .name = group.name };
+        try self.groups.append(grp);
+    }
 
     pub fn compareUser(context: void, user1: User, user2: User) Order {
         _ = context;
