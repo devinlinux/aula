@@ -27,16 +27,7 @@ pub const GroupDatabase = struct {
 
         switch (mode) {
             .new => {
-                if (!exists) {
-                    std.fs.cwd().makeDir(dir) catch |err| {
-                        std.debug.print("Failed to create directory: {}\n", .{err});
-                        std.process.exit(1);
-                    };
-                } else {
-                    std.debug.print("Directory {s} already exists, perhaps try recovering\n", .{dir});
-                    std.process.exit(1);
-                }
-
+                //  dir should be created by user db
                 const file = std.fs.cwd().createFile(file_path, .{}) catch |err| {
                     std.debug.print("Error creating file for new group database: {}\n", .{err});
                     std.process.exit(1);
@@ -98,17 +89,6 @@ pub const GroupDatabase = struct {
         }
 
         return null;
-    }
-
-    pub fn addToGroup(self: *GroupDatabase, group: usize, user: User) !bool {
-        var grp = try self.getGroup(group);
-        if (!grp) {
-            return false;
-        }
-
-        try grp.?.addUser(user);
-        try self.insertGroup(grp);
-        return true;
     }
 
     pub fn flush(self: *GroupDatabase) !void {

@@ -13,11 +13,11 @@ pub const User = struct {
     profile_picture: []const u8,  //  max 32 chars
     major: Major,
     graduation_year: i16,
-    groups: std.ArrayList(Group),
+    groups: std.ArrayList(StrippedGroup),
 
     pub fn addGroup(self: *User, group: Group) !void {
         const grp = StrippedGroup { .id = group.id, .name = group.name };
-        try self.groups.append(grp);
+        try self.groups.append(std.heap.smp_allocator, grp);
     }
 
     pub fn compareUser(context: void, user1: User, user2: User) Order {

@@ -12,8 +12,8 @@ const CMD_END: []const u8 = "END";
 const CMD_CREATE_USER: []const u8 = "create_user";  //  user_json
 const CMD_CREATE_GROUP: []const u8 = "create_group";  //  group_json
 const CMD_VALID_PASSWORD: []const u8 = "verify_password";  //  id hash
-const CMD_ADD_USER_TO_GROUP: []const u8 = "add_to_group";  //  user_name or id            |  Maybe use new type to that has id
-const CMD_REMOVE_USER_FROM_GROUP: []const u8 = "remove_from_group";  //  user_name or id  |  and name
+const CMD_ADD_USER_TO_GROUP: []const u8 = "add_to_group";  //  user_name or id            |  Maybe use new type to that has id | user_id and group_id
+const CMD_REMOVE_USER_FROM_GROUP: []const u8 = "remove_from_group";  //  user_name or id  |  and name                          | user_id and group_id
 const CMD_GET_USER: []const u8 = "get_user";  //  id
 const CMD_GET_GROUP: []const u8 = "get_group";  //  id
 const CMD_GET_GROUPS: []const u8 = "get_groups";  //  returns all groups
@@ -80,8 +80,9 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
                     .result = .failure,
                     .message = "Failed to create user",
                 };
-                std.debug.print("{s}\n", .{out.toArrayList().items});
                 try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
             };
 
             const msg = Message {
@@ -104,6 +105,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
                 };
                 try std.json.Stringify.value(msg, .{}, &out.writer);
                 std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
             };
 
             const msg = Message {
@@ -129,6 +131,7 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
                 };
                 try std.json.Stringify.value(msg, .{}, &out.writer);
                 std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
             }
 
             if (std.mem.eql(u8, hash, user.?.password)) {
@@ -145,9 +148,44 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
                 };
                 try std.json.Stringify.value(msg, .{}, &out.writer);
                 std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
             }
         } else if (std.mem.eql(u8, CMD_ADD_USER_TO_GROUP, input_list.items[0])) {
+            if (input_list.items.len < 3) {
+                std.debug.print("Expected 3 arguments, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
 
+            const user_id = try std.fmt.parseInt(usize, input_list.items[1], 10);
+            const group_id = try std.fmt.parseInt(usize, input_list.items[2], 10);
+
+            var user = try user_db.getUser(user_id);
+            var group = try group_db.getGroup(group_id);
+
+            if (user == null or group == null) {
+                const msg = Message {
+                    .result = .failure,
+                    .message = "User or group does not exist",
+                };
+
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
+            }
+
+            try user.?.addGroup(group.?);
+            try group.?.addUser(user.?);
+
+            try user_db.insertUser(user.?);
+            try group_db.insertGroup(group.?);
+
+            const msg = Message {
+                .result = .success,
+                .message = "Successfully added user to group",
+            };
+
+            try std.json.Stringify.value(msg, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_REMOVE_USER_FROM_GROUP, input_list.items[0])) {
 
         } else if (std.mem.eql(u8, CMD_GET_USER, input_list.items[0])) {

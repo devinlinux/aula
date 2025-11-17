@@ -99,17 +99,6 @@ pub const UserDatabase = struct {
         return null;
     }
 
-    pub fn addUserToGroup(self: *UserDatabase, user: usize, group: Group) !bool {
-        var usr = try self.getUser(user);
-        if (!usr) {
-            return false;
-        }
-
-        try usr.?.addGroup(group);
-        try self.insertUser(usr.?);
-        return true;
-    }
-
     pub fn flush(self: *UserDatabase) !void {
         const allocator = std.heap.smp_allocator;
 

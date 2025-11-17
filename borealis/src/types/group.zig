@@ -33,7 +33,7 @@ pub const Group = struct {
         };
 
         const stripped = StrippedUser{ .id = user.id, .full_name = full_name };
-        try self.members.append(stripped);
+        try self.members.append(allocator, stripped);
     }
 
     pub fn compareGroup(context: void, group1: Group, group2: Group) Order {
