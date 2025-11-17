@@ -1,6 +1,6 @@
 const std = @import("std");
 const PriorityQueue = std.PriorityQueue;
-const Group = @import("../types/group.zig");
+const Group = @import("../types/group.zig").Group;
 const Mode = @import("mode.zig").Mode;
 
 const DB_FILE: []const u8 = "groups.db";
@@ -123,7 +123,7 @@ pub const GroupDatabase = struct {
         var read_buffer: [MAX_LINE_LENGTH]u8 = undefined;
         var reader = read_file.reader(&read_buffer);
 
-        var groups = PriorityQueue(Group, void, Group.compareGroup);
+        var groups = PriorityQueue(Group, void, Group.compareGroup).init(allocator, undefined);
         defer groups.deinit();
 
         while (try reader.interface.takeDelimiter('\n')) |line| {

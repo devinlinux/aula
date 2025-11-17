@@ -8,6 +8,7 @@ const Mode = @import("mode.zig").Mode;
 
 const CMD_END: []const u8 = "END";
 const CMD_CREATE_USER: []const u8 = "create_user";  //  user_json
+const CMD_CREATE_GROUP: []const u8 = "create_group";  //  group_json
 const CMD_VALID_PASSWORD: []const u8 = "verify_password";  //  id hash
 const CMD_ADD_USER_TO_GROUP: []const u8 = "add_to_group";  //  user_name or id            |  Maybe use new type to that has id
 const CMD_REMOVE_USER_FROM_GROUP: []const u8 = "remove_from_group";  //  user_name or id  |  and name
@@ -47,8 +48,6 @@ pub fn newDatabase(dir: []const u8) void {
 }
 
 fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDatabase) !void {
-    _ = group_db;
-
     var stdin_buffer: [1024]u8 = undefined;
     var stdin = std.fs.File.stdin().reader(&stdin_buffer);
 
@@ -76,6 +75,20 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
                 std.debug.print("{s}\n", .{CODE_FAILURE});
                 return err;
             };
+
+            std.debug.print("{s}\n", .{CODE_SUCCESS});
+        } else if (std.mem.eql(u8, CMD_CREATE_GROUP, input_list.items[0])) {
+            const parsed_group = std.json.parseFromSlice(Group, allocator, input_list.items[0], .{}) catch |err| {
+                std.debug.print("Error deserializing group from input, this should never happen!: {}\n", .{err});
+                std.process.exit(1);
+            };
+
+            const group = parsed_group.value;
+            group_db.*.insertGroup(group) catch |err| {
+                std.debug.print("{s}\n", .{CODE_FAILURE});
+                return err;
+            };
+
             std.debug.print("{s}\n", .{CODE_SUCCESS});
         } else if (std.mem.eql(u8, CMD_VALID_PASSWORD, input_list.items[0])) {
 
