@@ -17,25 +17,21 @@ pub enum ServerMode {
 
 impl WebServer {
     pub fn run(listener: TcpListener, mode: ServerMode, dir: &str) -> std::io::Result<Server> {
+        let dir = dir.to_string();
+
         let num_users = match mode {
-            ServerMode::Genesis => {
-                Arc::new(Mutex::new(0usize))
-            },
-            ServerMode::Recovery => {
-                let num = read_num(dir, true)?;
-                Arc::new(Mutex::new(num))
-            },
+            ServerMode::Genesis => Arc::new(Mutex::new(0usize)),
+            ServerMode::Recovery => Arc::new(Mutex::new(read_num(&dir, true)?)),
         };
 
         let num_groups = match mode {
-            ServerMode::Genesis => {
-                Arc::new(Mutex::new(0usize))
-            },
-            ServerMode::Recovery => {
-                let num = read_num(dir, false)?;
-                Arc::new(Mutex::new(num))
-            },
+            ServerMode::Genesis => Arc::new(Mutex::new(0usize)),
+            ServerMode::Recovery => Arc::new(Mutex::new(read_num(&dir, false)?)),
         };
+
+        let dir_for_shutdown = dir.clone();
+        let users_for_shutdown = num_users.clone();
+        let groups_for_shutdown = num_groups.clone();
 
         let server = HttpServer::new(move || {
             App::new()
@@ -54,6 +50,30 @@ impl WebServer {
                 .service(crate::server::routes::register)
         })
         .listen(listener)?.run();
+
+        let server_handle = server.handle();
+
+        actix_rt::spawn(async move {
+            tokio::signal::ctrl_c()
+                .await
+                .expect("Failed to install CTRL+C handler");
+
+            println!("Server shutting down, saving counters...");
+
+            let users = *users_for_shutdown.lock().unwrap();
+            let groups = *groups_for_shutdown.lock().unwrap();
+
+            println!("Users: {}, Groups: {}", users, groups);
+
+            if let Err(e) = write_num(&dir_for_shutdown, users, true) {
+                eprintln!("Failed to save user count: {}", e);
+            }
+            if let Err(e) = write_num(&dir_for_shutdown, groups, false) {
+                eprintln!("Failed to save group count: {}", e);
+            }
+
+            server_handle.stop(false).await;
+        });
 
         Ok(server)
     }
