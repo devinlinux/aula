@@ -1,7 +1,9 @@
 const std = @import("std");
 const User = @import("../types/user.zig").User;
+const Group = @import("../types/group.zig").Group;
 const Major = @import("../types/major.zig").Major;
 const UserDatabase = @import("user_db.zig").UserDatabase;
+const GroupDatabase = @import("group_db.zig").GroupDatabase;
 const Mode = @import("mode.zig").Mode;
 
 const CMD_END: []const u8 = "END";
@@ -21,6 +23,9 @@ pub fn recoverDatabase(dir: []const u8) void {
 
     var user_db = UserDatabase.init(allocator, dir, Mode.recover);
     defer user_db.deinit();
+
+    var group_db = GroupDatabase.init(allocator, dir, Mode.recover);
+    defer group_db.deinit();
 
     const ids = [_]usize{1, 2, 4, 5, 6, 9, 11};
     for (ids) |id| {
@@ -48,7 +53,7 @@ pub fn recoverDatabase(dir: []const u8) void {
         std.debug.print("Error during flush: {}\n", .{err});
     };
 
-    repl(allocator, &user_db) catch |err| {
+    repl(allocator, &user_db, &group_db) catch |err| {
         std.debug.print("Error during repl: {}\n", .{err});
     };
 }
@@ -59,12 +64,17 @@ pub fn newDatabase(dir: []const u8) void {
     var user_db = UserDatabase.init(allocator, dir, Mode.new);
     defer user_db.deinit();
 
-    repl(allocator, &user_db) catch |err| {
+    var group_db = GroupDatabase.init(allocator, dir, Mode.new);
+    defer group_db.deinit();
+
+    repl(allocator, &user_db, &group_db) catch |err| {
         std.debug.print("Error during repl: {}\n", .{err});
     };
 }
 
-fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase) !void {
+fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDatabase) !void {
+    _ = group_db;
+
     var stdin_buffer: [1024]u8 = undefined;
     var stdin = std.fs.File.stdin().reader(&stdin_buffer);
 
