@@ -187,7 +187,41 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(msg, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_REMOVE_USER_FROM_GROUP, input_list.items[0])) {
+            if (input_list.items.len < 3) {
+                std.debug.print("Expected 3 arguments, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
 
+            const user_id = try std.fmt.parseInt(usize, input_list.items[1], 10);
+            const group_id = try std.fmt.parseInt(usize, input_list.items[2], 10);
+
+            var user = try user_db.getUser(user_id);
+            var group = try group_db.getGroup(group_id);
+
+            if (user == null or group == null) {
+                const msg = Message {
+                    .result = .failure,
+                    .message = "User or group does not exist",
+                };
+
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
+            }
+
+            user.?.removeGroup(group.?);
+            group.?.removeUser(user.?);
+
+            try user_db.insertUser(user.?);
+            try group_db.insertGroup(group.?);
+
+            const msg = Message {
+                .result = .success,
+                .message = "Successfully removed user from group",
+            };
+
+            try std.json.Stringify.value(msg, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_USER, input_list.items[0])) {
 
         } else if (std.mem.eql(u8, CMD_GET_GROUP, input_list.items[0])) {

@@ -36,6 +36,17 @@ pub const Group = struct {
         try self.members.append(allocator, stripped);
     }
 
+    pub fn removeUser(self: *Group, user: User) void {
+        const usr = StrippedUser { .id = user.id, .full_name = "" };
+
+        for (self.members.items, 0..) |u, i| {
+            if (usr.id == u.id) {
+                _ = self.members.orderedRemove(i);
+                break;
+            }
+        }
+    }
+
     pub fn compareGroup(context: void, group1: Group, group2: Group) Order {
         _ = context;
 

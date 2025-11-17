@@ -20,6 +20,17 @@ pub const User = struct {
         try self.groups.append(std.heap.smp_allocator, grp);
     }
 
+    pub fn removeGroup(self: *User, group: Group) void {
+        const grp = StrippedGroup { .id = group.id, .name = group.name };
+
+        for (self.groups.items, 0..) |g, i| {
+            if (grp.id == g.id) {
+                _ = self.groups.orderedRemove(i);
+                break;
+            }
+        }
+    }
+
     pub fn compareUser(context: void, user1: User, user2: User) Order {
         _ = context;
 
