@@ -17,11 +17,30 @@ pub enum ServerMode {
 
 impl WebServer {
     pub fn run(listener: TcpListener, mode: ServerMode, dir: &str) -> std::io::Result<Server> {
-        let num_users = Arc::new(Mutex::new(0usize));
+        let num_users = match mode {
+            ServerMode::Genesis => {
+                Arc::new(Mutex::new(0usize))
+            },
+            ServerMode::Recovery => {
+                let num = read_num(dir, true)?;
+                Arc::new(Mutex::new(num))
+            },
+        };
+
+        let num_groups = match mode {
+            ServerMode::Genesis => {
+                Arc::new(Mutex::new(0usize))
+            },
+            ServerMode::Recovery => {
+                let num = read_num(dir, false)?;
+                Arc::new(Mutex::new(num))
+            },
+        };
 
         let server = HttpServer::new(move || {
             App::new()
                 .app_data(web::Data::new(num_users.clone()))
+                .app_data(web::Data::new(num_groups.clone()))
                 .app_data(web::JsonConfig::default().limit(MAX_SIZE))
                 .wrap(
                     actix_cors::Cors::default()
