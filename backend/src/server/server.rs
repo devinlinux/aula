@@ -4,6 +4,7 @@ use std::sync::{ Arc, Mutex };
 use actix_web::dev::Server;
 use actix_web::{ web, App, HttpServer };
 
+const USER_COUNT_FILE: &str = "user_count.dat";
 const MAX_SIZE: usize = 4096;
 
 pub struct WebServer;
@@ -38,3 +39,14 @@ impl WebServer {
     }
 }
 
+fn read_num_users(dir: &str) -> std::io::Result<usize> {
+    let contents = std::fs::read_to_string(format!("{}/{}", dir, USER_COUNT_FILE))?;
+    let num = contents.trim().parse::<usize>()
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
+    Ok(num)
+}
+
+fn write_num_users(dir: &str, num_users: usize) -> std::io::Result<()> {
+    std::fs::write(format!("{}/{}", dir, USER_COUNT_FILE), num_users.to_string())?;
+    Ok(())
+}
