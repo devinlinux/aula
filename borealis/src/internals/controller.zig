@@ -223,13 +223,34 @@ fn repl(allocator: std.mem.Allocator, user_db: *UserDatabase, group_db: *GroupDa
             try std.json.Stringify.value(msg, .{}, &out.writer);
             std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_USER, input_list.items[0])) {
+            if (input_list.items.len < 2) {
+                std.debug.print("Expected 2 arguments, got {d}\n", .{input_list.items.len});
+                std.process.exit(1);
+            }
 
+            const user_id = try std.fmt.parseInt(usize, input_list.items[1], 10);
+            const user = try user_db.getUser(user_id);
+
+            if (user != null) {
+                const msg = Message {
+                    .result = .failure,
+                    .message = "User not found",
+                };
+
+                try std.json.Stringify.value(msg, .{}, &out.writer);
+                std.debug.print("{s}\n", .{out.toArrayList().items});
+                continue;
+            }
+
+            try std.json.Stringify.value(user.?, .{}, &out.writer);
+            std.debug.print("{s}\n", .{out.toArrayList().items});
         } else if (std.mem.eql(u8, CMD_GET_GROUP, input_list.items[0])) {
 
         } else if (std.mem.eql(u8, CMD_GET_GROUPS, input_list.items[0])) {
 
         } else {
-
+            std.debug.print("Unknown command, this should never happen\n", .{});
+            std.process.exit(1);
         }
     }
 }
