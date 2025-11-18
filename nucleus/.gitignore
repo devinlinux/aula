@@ -1,4 +1,6 @@
 target/
-.mvn/
 !**/src/main/**/target/
 !**/src/test/**/target/
+.mvn/
+
+src/main/resources/application.properties

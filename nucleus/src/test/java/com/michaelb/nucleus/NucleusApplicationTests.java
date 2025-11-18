@@ -1,10 +1,10 @@
-package com.michaelb.coalesence;
+package com.michaelb.nucleus;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CoalesenceApplicationTests {
+class NucleusApplicationTests {
 
 	@Test
 	void contextLoads() {

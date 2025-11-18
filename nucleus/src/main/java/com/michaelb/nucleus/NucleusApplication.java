@@ -1,13 +1,13 @@
-package com.michaelb.coalesence;
+package com.michaelb.nucleus;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CoalesenceApplication {
+public class NucleusApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CoalesenceApplication.class, args);
+		SpringApplication.run(NucleusApplication.class, args);
 	}
 
 }
