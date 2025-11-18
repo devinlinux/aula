@@ -1,5 +1,6 @@
 mod data;
 mod server;
+mod ipc;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
