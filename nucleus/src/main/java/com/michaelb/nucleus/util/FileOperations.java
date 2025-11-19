@@ -13,14 +13,27 @@ import java.util.function.Function;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.michaelb.util.TriFunction;
+import com.michaelb.nucleus.util.TriFunction;
 
 public class FileOperations {
 
-    public final Function<String, String> fileExtension = filename -> Optional.of(filename).filter(name -> name.contains("."))
+    private static final Function<String, String> fileExtension = filename -> Optional.of(filename).filter(name -> name.contains("."))
             .map(name -> "." + name.substring(filename.lastIndexOf(".") + 1)).orElse(".png");
 
-    public final BiFunction<String, MultipartFile, String> imageSaver = (id, image) -> {
+    public static final TriFunction<String, String, MultipartFile, String> imageSaver = (path, id, image) -> {
         String filename = id + fileExtension.apply(image.getOriginalFilename());
+
+        try {
+            Path fileStorageLocation = Paths.get(Constants.RESOURCES_DIR).toAbsolutePath().normalize();
+            if (Files.exists(fileStorageLocation))
+                Files.createDirectories(fileStorageLocation);
+
+            Files.copy(image.getInputStream(), fileStorageLocation.resolve(id + ".png"), REPLACE_EXISTING);
+            return ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path(path + filename).toUriString();
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to save image");
+        }
     };
 }
