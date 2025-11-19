@@ -1,5 +1,6 @@
 package com.michaelb.nucleus.services;
 
+// imports
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,7 +24,7 @@ import com.michaelb.nucleus.util.Constants;
 public class UserService {
     private final UserRepo userRepo;
 
-    public UserService(UserRepo userRepo) throws IOException {
+    public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
 
@@ -41,10 +42,10 @@ public class UserService {
 
     public String uploadProfilePicture(String id, MultipartFile profilePicture) {
         User user = this.getUserById(id);
-        String path = null;
-        user.profilePicture(path);
+        String url = profilePictureFunction.apply(id, profilePicture);
+        user.profilePicture(url);
         this.userRepo.save(user);
-        return path;
+        return url;
     }
 
     private final Function<String, String> fileExtension = filename -> Optional.of(filename).filter(name -> name.contains("."))
@@ -52,13 +53,14 @@ public class UserService {
 
     private final BiFunction<String, MultipartFile, String> profilePictureFunction = (id, image) -> {
         String filename = id + fileExtension.apply(image.getOriginalFilename());
+
         try {
             Path fileStorageLocation = Paths.get(Constants.RESOURCES_DIR).toAbsolutePath().normalize();
             if (Files.exists(fileStorageLocation))
                 Files.createDirectories((fileStorageLocation));
             Files.copy(image.getInputStream(), fileStorageLocation.resolve(id + ".png"), REPLACE_EXISTING);
             return ServletUriComponentsBuilder
-                    .fromCurrentContextPath().path(Constants.PROFILE_PICTURE_DIR + id + fileExtension.apply(image.getOriginalFilename())).toUriString();
+                    .fromCurrentContextPath().path(filename).toUriString();
         } catch (IOException e) {
             throw new RuntimeException("Unable to save image");
         }
