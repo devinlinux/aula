@@ -8,8 +8,7 @@ import jakarta.transaction.Transactional;
 import com.michaelb.nucleus.repositories.UserRepo;
 import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.util.FileOperations;
-
-import static com.michaelb.nucleus.util.Constants.USER_PROFILE_PICTURE_DIR;
+import static com.michaelb.nucleus.util.Constants.USER_IMAGE_DIR;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -34,7 +33,7 @@ public class UserService {
 
     public String uploadProfilePicture(String id, MultipartFile profilePicture) {
         User user = this.getUserById(id);
-        String url = FileOperations.imageSaver.apply(USER_PROFILE_PICTURE_DIR, id, profilePicture);
+        String url = FileOperations.imageSaver.apply(USER_IMAGE_DIR, id, profilePicture);
         user.profilePicture(url);
         this.userRepo.save(user);
         return url;

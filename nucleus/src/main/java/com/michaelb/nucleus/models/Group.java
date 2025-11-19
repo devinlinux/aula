@@ -20,4 +20,9 @@ public class Group {
     private String name;
     private ArrayList<MeetingTime> times;
     private ArrayList<String> members;  // user ids
+    private String bannerImage;
+
+    public void bannerImage(String bannerImage) {
+        this.bannerImage = bannerImage;
+    }
 }
