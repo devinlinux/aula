@@ -20,5 +20,9 @@ public class User {
     private String email;
     private Major major;
     private Integer graduationYear;
-    private String photoUrl;
+    private String profilePicture;
+
+    public void profilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 }
