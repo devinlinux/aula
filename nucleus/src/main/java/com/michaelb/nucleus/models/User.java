@@ -19,7 +19,7 @@ public class User {
     private String hashedPassword;
     @Column(unique = true)
     private String email;
-    private Major major;
+    private String major;
     private Integer graduationYear;
     private String profilePicture;
 
