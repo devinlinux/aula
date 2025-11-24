@@ -18,6 +18,7 @@ public class Group {
     @Column(unique = true)
     private String id;
     private String name;
+    private String associatedClass;
     private ArrayList<MeetingTime> times;
     private ArrayList<String> members;  // user ids
     private String bannerImage;
