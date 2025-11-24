@@ -4,6 +4,7 @@ package com.michaelb.nucleus.services;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.michaelb.nucleus.repositories.UserRepo;
 import com.michaelb.nucleus.models.User;
@@ -14,12 +15,21 @@ import static com.michaelb.nucleus.util.Constants.USER_IMAGE_DIR;
 @Transactional(rollbackOn = Exception.class)
 public class UserService {
     private final UserRepo repo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepo repo) {
+    public UserService(UserRepo repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User createuser(User user) {
+        if (user.getHashedPassword() == null || user.getHashedPassword().isEmpty()) {
+            throw new RuntimeException("Password is required");
+        }
+        
+        String hashed = passwordEncoder.encode(user.getHashedPassword());
+        user.setHashedPassword(hashed);
+        
         return this.repo.save(user);
     }
 
@@ -34,8 +44,12 @@ public class UserService {
     public String uploadProfilePicture(String id, MultipartFile profilePicture) {
         User user = this.getUserById(id);
         String url = FileOperations.imageSaver.apply(USER_IMAGE_DIR, id, profilePicture);
-        user.profilePicture(url);
+        user.setProfilePicture(url);
         this.repo.save(user);
         return url;
+    }
+
+    public boolean verifyPassword(User user, String raw) {
+        return passwordEncoder.matches(raw, user.getHashedPassword());
     }
 }
