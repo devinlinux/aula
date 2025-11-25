@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.hibernate.annotations.UuidGenerator;
+import com.michaelb.nucleus.dto.UserDTO;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +23,17 @@ public class User {
     private String major;
     private Integer graduationYear;
     private String profilePicture;
+
+    public UserDTO intoDTO() {
+        return new UserDTO(
+                this.firstName,
+                this.lastName,
+                this.email,
+                this.major,
+                this.graduationYear,
+                this.profilePicture
+        );
+    }
 
     public void setId(String id) {
         this.id = id;

@@ -22,7 +22,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createuser(User user) {
+    public User registerUser(User user) {
         if (user.getHashedPassword() == null || user.getHashedPassword().isEmpty()) {
             throw new RuntimeException("Password is required");
         }
@@ -41,9 +41,9 @@ public class UserService {
         return this.repo.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public String uploadProfilePicture(String id, MultipartFile profilePicture) {
-        User user = this.getUserById(id);
-        String url = FileOperations.imageSaver.apply(USER_IMAGE_DIR, id, profilePicture);
+    public String uploadProfilePicture(String email, MultipartFile profilePicture) {
+        User user = this.getUserByEmail(email);
+        String url = FileOperations.imageSaver.apply(USER_IMAGE_DIR, user.getId(), profilePicture);
         user.setProfilePicture(url);
         this.repo.save(user);
         return url;
