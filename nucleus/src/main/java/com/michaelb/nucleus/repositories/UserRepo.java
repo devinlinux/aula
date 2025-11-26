@@ -8,6 +8,5 @@ import com.michaelb.nucleus.models.User;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, String> {
-    Optional<User> findById(String id);
     Optional<User> findByEmail(String email);
 }

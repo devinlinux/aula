@@ -34,12 +34,13 @@ public class UserController {
 
     @PostMapping("/register")
     public LoginResponseDTO registerUser(@RequestBody RegisterDTO request) {
+        System.out.println("hello world");
         if (request.password() == null || request.password().isEmpty())
-            throw new RuntimeException("Password is required");
+            throw new RuntimeException("register");
         User user = request.intoUser();
         User saved = this.service.registerUser(user);
 
-        this.activeSessions.put(saved.getId(), true);
+        this.activeSessions.put(saved.getEmail(), true);
         return new LoginResponseDTO(saved.intoDTO(), UUID.randomUUID().toString());
     }
 
@@ -52,7 +53,7 @@ public class UserController {
         if (!valid)
             return new LoginResponseDTO(null, null);
         else {
-            this.activeSessions.put(user.getId(), true);
+            this.activeSessions.put(user.getEmail(), true);
             return new LoginResponseDTO(user.intoDTO(), UUID.randomUUID().toString());
         }
     }
@@ -60,26 +61,19 @@ public class UserController {
     @PostMapping("/logout/{email}")
     public String logout(@PathVariable String email) {
         User user = this.service.getUserByEmail(email);
-        this.activeSessions.remove(user.getId());
+        this.activeSessions.remove(user.getEmail());
         return "Successfully logged out";
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/me/{email}")
     public UserDTO getUser(@PathVariable String email) {
         User user = this.service.getUserByEmail(email);
         return user.intoDTO();
     }
 
-    @PostMapping("/{email}/profile-picture")
-    public String uploadProfilePicture(
-            @PathVariable String email,
-            @RequestParam("file") MultipartFile profilePicture)
-    {
-        return this.service.uploadProfilePicture(email, profilePicture);
-    }
-
     @GetMapping("/health-check")
     public String healthCheck() {
+        System.out.println("Health check");
         return "Hello World";
     }
 }

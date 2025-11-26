@@ -21,10 +21,5 @@ public class Group {
     private String associatedClass;
     private ArrayList<MeetingTime> times;
     private ArrayList<String> members;  // user ids
-    private String bannerImage;
     private String creator;  // user id
-
-    public void bannerImage(String bannerImage) {
-        this.bannerImage = bannerImage;
-    }
 }

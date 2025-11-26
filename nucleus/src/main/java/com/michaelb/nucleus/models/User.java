@@ -11,32 +11,26 @@ import com.michaelb.nucleus.dto.UserDTO;
 @Entity
 @Table(name = "users")
 public class User {
-    @Id
-    @UuidGenerator
-    @Column(unique = true)
-    private String id;
     private String firstName;
     private String lastName;
     private String password;
+    @Id
     @Column(unique = true)
     private String email;
     private String major;
     private Integer graduationYear;
-    private String profilePicture;
 
     public User() {
-        this(null, null, null, null, null, null, 0, null);
+        this(null, null, null, null, null, 0);
     }
 
-    public User(String id, String firstName, String lastName, String email, String password, String major, int graduationYear, String profilePicture) {
-        this.id = id;
+    public User(String firstName, String lastName, String email, String password, String major, int graduationYear) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
         this.major = major;
         this.graduationYear = graduationYear;
-        this.profilePicture = profilePicture;
     }
 
     public UserDTO intoDTO() {
@@ -45,17 +39,8 @@ public class User {
                 this.lastName,
                 this.email,
                 this.major,
-                this.graduationYear,
-                this.profilePicture
+                this.graduationYear
         );
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return this.id;
     }
 
     public void setFirstName(String firstName) {
@@ -104,13 +89,5 @@ public class User {
 
     public Integer getGraduationYear() {
         return this.graduationYear;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    public String getProfilePicture() {
-        return this.profilePicture;
     }
 }
