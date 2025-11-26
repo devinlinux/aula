@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.UserService;
@@ -34,7 +33,6 @@ public class UserController {
 
     @PostMapping("/register")
     public LoginResponseDTO registerUser(@RequestBody RegisterDTO request) {
-        System.out.println("hello world");
         if (request.password() == null || request.password().isEmpty())
             throw new RuntimeException("register");
         User user = request.intoUser();
@@ -73,7 +71,6 @@ public class UserController {
 
     @GetMapping("/health-check")
     public String healthCheck() {
-        System.out.println("Health check");
         return "Hello World";
     }
 }
