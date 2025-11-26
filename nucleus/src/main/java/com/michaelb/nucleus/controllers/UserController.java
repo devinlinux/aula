@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.UserService;
 import com.michaelb.nucleus.dto.UserDTO;
+import com.michaelb.nucleus.dto.RegisterDTO;
 import com.michaelb.nucleus.dto.LoginRequestDTO;
 import com.michaelb.nucleus.dto.LoginResponseDTO;
 
@@ -32,11 +33,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public LoginResponseDTO registerUser(@RequestBody User user) {
-        if (user.getHashedPassword() == null || user.getHashedPassword().isEmpty())
+    public LoginResponseDTO registerUser(@RequestBody RegisterDTO request) {
+        if (request.password() == null || request.password().isEmpty())
             throw new RuntimeException("Password is required");
+        User user = request.intoUser();
         User saved = this.service.registerUser(user);
-        return new LoginResponseDTO(user.intoDTO(), UUID.randomUUID().toString());
+
+        this.activeSessions.put(saved.getId(), true);
+        return new LoginResponseDTO(saved.intoDTO(), UUID.randomUUID().toString());
     }
 
     @PostMapping("/login")
@@ -47,8 +51,17 @@ public class UserController {
         //  TODO: add success code?
         if (!valid)
             return new LoginResponseDTO(null, null);
-        else
+        else {
+            this.activeSessions.put(user.getId(), true);
             return new LoginResponseDTO(user.intoDTO(), UUID.randomUUID().toString());
+        }
+    }
+
+    @PostMapping("/logout/{email}")
+    public String logout(@PathVariable String email) {
+        User user = this.service.getUserByEmail(email);
+        this.activeSessions.remove(user.getId());
+        return "Successfully logged out";
     }
 
     @GetMapping("/{email}")
@@ -63,5 +76,10 @@ public class UserController {
             @RequestParam("file") MultipartFile profilePicture)
     {
         return this.service.uploadProfilePicture(email, profilePicture);
+    }
+
+    @GetMapping("/health-check")
+    public String healthCheck() {
+        return "Hello World";
     }
 }

@@ -23,12 +23,14 @@ public class UserService {
     }
 
     public User registerUser(User user) {
-        if (user.getHashedPassword() == null || user.getHashedPassword().isEmpty()) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new RuntimeException("Password is required");
         }
+
+        user.setId(java.util.UUID.randomUUID().toString());
         
-        String hashed = passwordEncoder.encode(user.getHashedPassword());
-        user.setHashedPassword(hashed);
+        String hashed = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashed);
         
         return this.repo.save(user);
     }
@@ -41,15 +43,17 @@ public class UserService {
         return this.repo.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    @Transactional
     public String uploadProfilePicture(String email, MultipartFile profilePicture) {
-        User user = this.getUserByEmail(email);
-        String url = FileOperations.imageSaver.apply(USER_IMAGE_DIR, user.getId(), profilePicture);
-        user.setProfilePicture(url);
-        this.repo.save(user);
-        return url;
+//        User user = this.getUserByEmail(email);
+//        String url = FileOperations.imageSaver.apply(USER_IMAGE_DIR, user.getId(), profilePicture);
+//        user.setProfilePicture(url);
+//        this.repo.saveAndFlush(user);
+//        return url;
+        return "";
     }
 
     public boolean verifyPassword(User user, String raw) {
-        return passwordEncoder.matches(raw, user.getHashedPassword());
+        return passwordEncoder.matches(raw, user.getPassword());
     }
 }

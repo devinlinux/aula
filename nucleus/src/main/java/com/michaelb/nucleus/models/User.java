@@ -17,12 +17,27 @@ public class User {
     private String id;
     private String firstName;
     private String lastName;
-    private String hashedPassword;
+    private String password;
     @Column(unique = true)
     private String email;
     private String major;
     private Integer graduationYear;
     private String profilePicture;
+
+    public User() {
+        this(null, null, null, null, null, null, 0, null);
+    }
+
+    public User(String id, String firstName, String lastName, String email, String password, String major, int graduationYear, String profilePicture) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
+        this.major = major;
+        this.graduationYear = graduationYear;
+        this.profilePicture = profilePicture;
+    }
 
     public UserDTO intoDTO() {
         return new UserDTO(
@@ -59,12 +74,12 @@ public class User {
         return this.lastName;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getHashedPassword() {
-        return this.hashedPassword;
+    public String getPassword() {
+        return this.password;
     }
 
     public void setEmail(String email) {
