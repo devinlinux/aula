@@ -37,56 +37,55 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public LoginResponseDTO registerUser(@RequestBody RegisterDTO request) {
+    public ResponseEntity<LoginResponseDTO> registerUser(@RequestBody RegisterDTO request) {
         if (request.password() == null || request.password().isEmpty())
             throw new RuntimeException("register");
         User user = request.intoUser();
         User saved = this.service.registerUser(user);
 
         this.activeSessions.put(saved.getEmail(), true);
-        return new LoginResponseDTO(saved.intoDTO(), UUID.randomUUID().toString());
+        return ResponseEntity.ok().body(new LoginResponseDTO(saved.intoDTO(), UUID.randomUUID().toString()));
     }
 
     @PostMapping("/login")
-    public LoginResponseDTO loginUser(@RequestBody LoginRequestDTO request) {
+    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody LoginRequestDTO request) {
         User user = this.service.getUserByEmail(request.email());
         boolean valid = this.service.verifyPassword(user, request.password());
 
-        //  TODO: add success code?
         if (!valid)
-            return new LoginResponseDTO(null, null);
+            return ResponseEntity.notFound().build();
         else {
             this.activeSessions.put(user.getEmail(), true);
-            return new LoginResponseDTO(user.intoDTO(), UUID.randomUUID().toString());
+            return ResponseEntity.ok().body(new LoginResponseDTO(user.intoDTO(), UUID.randomUUID().toString()));
         }
     }
 
     @PostMapping("/logout/{email}")
-    public String logout(@PathVariable String email) {
+    public ResponseEntity<String> logout(@PathVariable String email) {
         User user = this.service.getUserByEmail(email);
         this.activeSessions.remove(user.getEmail());
-        return "Successfully logged out";
+        return ResponseEntity.ok().body("Successfully logged out");
     }
 
     @GetMapping("/me/{email}")
-    public UserDTO getUser(@PathVariable String email) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable String email) {
         User user = this.service.getUserByEmail(email);
-        return user.intoDTO();
+        return ResponseEntity.ok().body(user.intoDTO());
     }
 
     @PostMapping("/upload-profile-picture")
-    public String uploadProfilePicture(@RequestParam("email") String email, @RequestParam("file") MultipartFile file) {
-        return this.service.uploadProfilePicture(email, file);
+    public ResponseEntity<String> uploadProfilePicture(@RequestParam("email") String email, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok().body(this.service.uploadProfilePicture(email, file));
     }
 
     @GetMapping("/profile-picture/{email}")
-    public byte[] getProfilePicture(@PathVariable String email) throws IOException {
+    public ResponseEntity<byte[]> getProfilePicture(@PathVariable String email) throws IOException {
         User user = this.service.getUserByEmail(email);
-        return Files.readAllBytes(Path.of(user.getProfilePicture()));
+        return ResponseEntity.ok().body(Files.readAllBytes(Path.of(user.getProfilePicture())));
     }
 
     @GetMapping("/health-check")
-    public String healthCheck() {
-        return "Hello World";
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok().body("Hello World");
     }
 }
