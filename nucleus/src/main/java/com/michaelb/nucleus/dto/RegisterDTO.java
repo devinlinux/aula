@@ -10,7 +10,8 @@ public record RegisterDTO(String firstName, String lastName, String email, Strin
                 email,
                 password,
                 major,
-                graduationYear
+                graduationYear,
+                null
         );
     }
 }

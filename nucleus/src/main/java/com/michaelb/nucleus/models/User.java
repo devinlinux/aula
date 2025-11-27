@@ -19,18 +19,20 @@ public class User {
     private String email;
     private String major;
     private Integer graduationYear;
+    private String profilePicture;
 
     public User() {
-        this(null, null, null, null, null, 0);
+        this(null, null, null, null, null, 0, null);
     }
 
-    public User(String firstName, String lastName, String email, String password, String major, int graduationYear) {
+    public User(String firstName, String lastName, String email, String password, String major, int graduationYear, String profilePicture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
         this.major = major;
         this.graduationYear = graduationYear;
+        this.profilePicture = profilePicture;
     }
 
     public UserDTO intoDTO() {
@@ -89,5 +91,13 @@ public class User {
 
     public Integer getGraduationYear() {
         return this.graduationYear;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getProfilePicture() {
+        return this.profilePicture;
     }
 }
