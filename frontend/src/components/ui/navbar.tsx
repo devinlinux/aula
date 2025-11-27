@@ -1,37 +1,58 @@
 "use client"
 
 import {
+    Container,
     Box,
+    Stack,
+    Heading,
     Flex,
-    Text,
+    Menu,
+    MenuItem,
+    MenuList,
+    MenuButton,
+    IconButton,
+    chakra,
 } from "@chakra-ui/react"
+import { HamburgerIcon } from "@chakra-ui/icons"
 
-const Navbar = () => {
+const Navbar = props => {
+    const { path } = props
+
     return (
-        <Flex
-            as="nav"
+        <Box
             position="fixed"
-            top="2%"
-            left="3%"
-            right="3%"
-            bg="whiteAlpha.900"
-            boxShadow="md"
-            zIndex="1000"
-            px="1rem"
-            py="2rem"
-            align="center"
-            justify="space-between"
+            as="nav"
+            w="100%"
+            bg="#20202380"
+            css={{ backdropFilter: "blur(10px)" }}
+            zIndex={3}
+            {...props}
         >
-            <Text fontWeight="bold" fontSize="xl">
-                NAME
-            </Text>
+            <Container
+                display="flex"
+                p={2}
+                maxW="container.md"
+                wrap="wrap"
+                align="center"
+                justify="space-between"
+            >
+                <Flex align="center" mr={5}>
+                    <Heading as="h1" size="lg" letterSpacing={"tighter"}>
+                        Aula
+                    </Heading>
+                </Flex>
 
-            <Flex gap={8}>
-                <Text cursor="pointer">Find</Text>
-                <Text cursor="pointer">Groups</Text>
-                <Text cursor="pointer">Forum</Text>
-            </Flex>
-        </Flex>
+                <Stack
+                    direction={{ base: "column", md: "row" }}
+                    display={{ base: "none", md: "flex" }}
+                    width={{ base: "full", md: "auto" }}
+                    alignItems="center"
+                    flexGrow={1}
+                    mt={{ base: 4, md: 0 }}
+                >
+                </Stack>
+            </Container>
+        </Box>
     )
 }
 
