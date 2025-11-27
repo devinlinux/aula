@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Provider from "./provider"
-import Navbar from "@/components/ui/navbar"
+import MainWrapper from "./main-wrapper"
 
 export const metadata: Metadata = {
   title: "INSERT_TITLE_HERE",
@@ -13,8 +13,7 @@ export default function RootLayer(props: { children: React.ReactNode }) {
         <html lang="en" suppressHydrationWarning>
             <body>
                 <Provider>
-                    <Navbar />
-                    {children}
+                    <MainWrapper>{children}</MainWrapper>
                 </Provider>
             </body>
         </html>
