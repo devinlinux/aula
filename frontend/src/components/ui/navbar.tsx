@@ -5,11 +5,19 @@ import {
     Flex,
     Stack,
     Heading,
+    Text,
     Link,
     Center,
+    Menu,
+    MenuItem,
+    MenuList,
+    MenuButton,
+    IconButton,
 } from "@chakra-ui/react"
+import { HamburgerIcon } from "@chakra-ui/icons"
 import React from "react"
 import NextLink from "next/link"
+import Logo from "@/components/ui/logo"
 
 const LinkItem = React.forwardRef(({ href, path, target, children, ...props }, ref) => {
     const active = path === href
@@ -47,7 +55,7 @@ const Navbar = ({ path, ...props }) => {
         >
             <Flex align="center" justify="space-between" pl={5} pr={5}>
                 <Heading as="h1" size="lg" letterSpacing="tighter">
-                    Aula
+                    <Logo />
                 </Heading>
 
                 <Stack
@@ -62,7 +70,16 @@ const Navbar = ({ path, ...props }) => {
                 </Stack>
 
                 <Heading as="h1" size="lg" letterSpacing="tighter">
-                    Profile
+                    <LinkItem href="/profile" path={path}>
+                        <Text
+                            color="whiteAlpha.900"
+                            fontFamily="M PLUS Rounded 1c, sans-serif"
+                            fontWeight="bold"
+                            mr={3}
+                        >
+                            Profile
+                        </Text>
+                    </LinkItem>
                 </Heading>
             </Flex>
         </Box>
@@ -70,4 +87,3 @@ const Navbar = ({ path, ...props }) => {
 }
 
 export default Navbar
-

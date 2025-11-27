@@ -21,8 +21,8 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
             <Silk
                 speed={3}
                 scale={1}
-                color="0C54C7"
-                noiseIntensity={0.5}
+                color="47a6e6"
+                noiseIntensity={0}
                 rotation={1.2}
             />
         </Box>
