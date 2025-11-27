@@ -9,23 +9,6 @@ import Navbar from "@/components/ui/navbar"
 export default function Home() {
     return (
         <Container>
-            <Box
-                position="fixed"
-                top={0}
-                left={0}
-                w="100%"
-                h="100%"
-                zIndex={-1}
-            >
-                <Silk
-                    speed={3}
-                    scale={1}
-                    color="0C54C7"
-                    noiseIntensity={0.5}
-                    rotation={1.2}
-                />
-
-            </Box>
         </Container>
     )
 }

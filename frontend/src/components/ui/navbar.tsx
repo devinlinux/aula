@@ -26,8 +26,7 @@ const LinkItem = React.forwardRef(({ href, path, target, children, ...props }, r
             as={NextLink}
             href={href}
             p={2}
-            bg={active ? "#88ccca" : undefined}
-            color={active ? "#202023" : "gray200"}
+            color={active ? "#f0e7db" : "whiteAlpha.900"}
             target={target}
             ref={ref}
             {...props}
@@ -72,6 +71,10 @@ const Navbar = props => {
                     flexGrow={1}
                     mt={{ base: 4, md: 0 }}
                 >
+                    <LinkItem href="/register" path={path}>Register</LinkItem>
+                    <LinkItem href="/login" path={path}>Login</LinkItem>
+                    <LinkItem href="/groups" path={path}>Groups</LinkItem>
+                    <LinkItem href="/forum" path={path}>Forum</LinkItem>
                 </Stack>
             </Container>
         </Box>
