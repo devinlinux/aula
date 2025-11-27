@@ -11,9 +11,31 @@ import {
     MenuList,
     MenuButton,
     IconButton,
+    Link,
     chakra,
 } from "@chakra-ui/react"
 import { HamburgerIcon } from "@chakra-ui/icons"
+import React from "react"
+import NextLink from "next/link"
+
+const LinkItem = React.forwardRef(({ href, path, target, children, ...props }, ref) => {
+    const active = path === href
+
+    return (
+        <Link
+            as={NextLink}
+            href={href}
+            p={2}
+            bg={active ? "#88ccca" : undefined}
+            color={active ? "#202023" : "gray200"}
+            target={target}
+            ref={ref}
+            {...props}
+         >
+            {children}
+         </Link>
+    )
+})
 
 const Navbar = props => {
     const { path } = props
