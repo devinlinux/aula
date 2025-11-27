@@ -1,20 +1,13 @@
 "use client"
 
 import {
-    Container,
     Box,
+    Flex,
     Stack,
     Heading,
-    Flex,
-    Menu,
-    MenuItem,
-    MenuList,
-    MenuButton,
-    IconButton,
     Link,
-    chakra,
+    Center,
 } from "@chakra-ui/react"
-import { HamburgerIcon } from "@chakra-ui/icons"
 import React from "react"
 import NextLink from "next/link"
 
@@ -30,55 +23,51 @@ const LinkItem = React.forwardRef(({ href, path, target, children, ...props }, r
             target={target}
             ref={ref}
             {...props}
-         >
+        >
             {children}
-         </Link>
+        </Link>
     )
 })
 
-const Navbar = props => {
-    const { path } = props
-
+const Navbar = ({ path, ...props }) => {
     return (
         <Box
             position="fixed"
             as="nav"
-            w="100%"
-            bg="#20202380"
-            css={{ backdropFilter: "blur(10px)" }}
+            w="70%"
+            bg="#20202399"
             zIndex={3}
+            top={2}
+            pt={1}
+            pb={1}
+            left="15%"
+            right="15%"
+            borderRadius={5}
             {...props}
         >
-            <Container
-                display="flex"
-                p={2}
-                maxW="container.md"
-                wrap="wrap"
-                align="center"
-                justify="space-between"
-            >
-                <Flex align="center" mr={5}>
-                    <Heading as="h1" size="lg" letterSpacing={"tighter"}>
-                        Aula
-                    </Heading>
-                </Flex>
+            <Flex align="center" justify="space-between" pl={5} pr={5}>
+                <Heading as="h1" size="lg" letterSpacing="tighter">
+                    Aula
+                </Heading>
 
                 <Stack
-                    direction={{ base: "column", md: "row" }}
+                    direction="row"
+                    spacing={4}
                     display={{ base: "none", md: "flex" }}
-                    width={{ base: "full", md: "auto" }}
-                    alignItems="center"
-                    flexGrow={1}
-                    mt={{ base: 4, md: 0 }}
                 >
-                    <LinkItem href="/register" path={path}>Register</LinkItem>
                     <LinkItem href="/login" path={path}>Login</LinkItem>
+                    <LinkItem href="/register" path={path}>Register</LinkItem>
                     <LinkItem href="/groups" path={path}>Groups</LinkItem>
                     <LinkItem href="/forum" path={path}>Forum</LinkItem>
                 </Stack>
-            </Container>
+
+                <Heading as="h1" size="lg" letterSpacing="tighter">
+                    Profile
+                </Heading>
+            </Flex>
         </Box>
     )
 }
 
 export default Navbar
+
