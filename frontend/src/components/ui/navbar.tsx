@@ -18,6 +18,7 @@ import { HamburgerIcon } from "@chakra-ui/icons"
 import React from "react"
 import NextLink from "next/link"
 import Logo from "@/components/ui/logo"
+import Profile from "@/components/ui/profile"
 
 const LinkItem = React.forwardRef(({ href, path, target, children, ...props }, ref) => {
     const active = path === href
@@ -70,16 +71,7 @@ const Navbar = ({ path, ...props }) => {
                 </Stack>
 
                 <Heading as="h1" size="lg" letterSpacing="tighter">
-                    <LinkItem href="/profile" path={path}>
-                        <Text
-                            color="whiteAlpha.900"
-                            fontFamily="M PLUS Rounded 1c, sans-serif"
-                            fontWeight="bold"
-                            mr={3}
-                        >
-                            Profile
-                        </Text>
-                    </LinkItem>
+                    <Profile />
                 </Heading>
             </Flex>
         </Box>
