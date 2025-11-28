@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 export default function RootLayer(props: { children: React.ReactNode }) {
     const { children } = props
+
     return (
         <html lang="en" suppressHydrationWarning>
             <body>

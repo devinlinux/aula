@@ -8,29 +8,35 @@ import Navbar from "@/components/ui/navbar"
 export default function MainWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
 
+    const plainRoutes = ['/']
+    const plain = plainRoutes.includes(pathname)
+
     return (
         <Box>
-        <Box
-            position="fixed"
-            top={0}
-            left={0}
-            w="100%"
-            h="100%"
-            zIndex={-1}
-        >
-            <Silk
-                speed={3}
-                scale={1}
-                color="47a6e6"
-                noiseIntensity={0}
-                rotation={1.2}
-            />
-        </Box>
-        <Box as="main" pb={8}>
-            <Navbar path={pathname} />
+            {!plain && (
+                <Box
+                    position="fixed"
+                    top={0}
+                    left={0}
+                    w="100%"
+                    h="100%"
+                    zIndex={-1}
+                >
+                    <Silk
+                        speed={3}
+                        scale={1}
+                        color="47a6e6"
+                        noiseIntensity={0}
+                        rotation={1.2}
+                    />
+                </Box>
+            )}
 
-            {children}
-        </Box>
+            <Box as="main" pb={8}>
+                {!plain && <Navbar path={pathname} />}
+
+                {children}
+            </Box>
         </Box>
     )
 }
