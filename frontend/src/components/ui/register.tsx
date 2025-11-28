@@ -8,11 +8,15 @@ import {
     Steps,
     ButtonGroup,
     Button,
+    CloseButton,
     Text,
     Field,
     Input,
+    InputGroup,
+    FileUpload,
 } from "@chakra-ui/react"
 import { FaUpload } from "react-icons/fa"
+import { FiFileMinus } from "react-icons/fi"
 import { PasswordInput } from "@/components/ui/password-input"
 
 const Register = () => {
@@ -104,6 +108,38 @@ const Register = () => {
                                         borderColor="white"
                                     />
                                 </Field.Root>
+                            </VStack>
+                        </Box>
+                    </Steps.Content>
+
+                    <Steps.Content key={3} index={3}>
+                        <Box color="whiteAlpha.900">
+                            <VStack>
+                                <FileUpload.Root required maxFiles={1}>
+                                    <FileUpload.HiddenInput />
+                                    <FileUpload.Label>Upload Profile Picture</FileUpload.Label>
+                                    <InputGroup
+                                        startElement={<FiFileMinus />}
+                                        endElement={
+                                            <FileUpload.ClearTrigger asChild>
+                                                <CloseButton
+                                                    me="-1"
+                                                    size="xs"
+                                                    variant="plain"
+                                                    focusVisibleRing="inside"
+                                                    focusRingWidth="2px"
+                                                    pointerEvents="auto"
+                                                />
+                                            </FileUpload.ClearTrigger>
+                                        }
+                                    >
+                                        <Input asChild>
+                                            <FileUpload.Trigger>
+                                                <Text color="fg.muted">Select File</Text>
+                                            </FileUpload.Trigger>
+                                        </Input>
+                                    </InputGroup>
+                                </FileUpload.Root>
                             </VStack>
                         </Box>
                     </Steps.Content>
