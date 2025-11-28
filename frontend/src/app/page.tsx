@@ -24,6 +24,7 @@ const Index = () => {
                 zIndex={3}
                 top={2}
                 pt={3}
+                pb={3}
                 left="15%"
                 right="15%"
                 borderRadius={5}

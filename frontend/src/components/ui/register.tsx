@@ -3,9 +3,14 @@
 import {
     Container,
     Box,
+    Center,
+    VStack,
     Steps,
     ButtonGroup,
     Button,
+    Text,
+    Field,
+    Input,
 } from "@chakra-ui/react"
 import { FaUpload } from "react-icons/fa"
 
@@ -25,14 +30,41 @@ const Register = () => {
                     ))}
                 </Steps.List>
 
-                <ButtonGroup size="sm" varient="outline" colorPalette="gray">
-                    <Steps.PrevTrigger asChild>
-                        <Button>Prev</Button>
-                    </Steps.PrevTrigger>
-                    <Steps.NextTrigger asChild>
-                        <Button>Next</Button>
-                    </Steps.NextTrigger>
-                </ButtonGroup>
+                <Center>
+                    <Steps.Content key={0} index={0}>
+                        <Box color="whiteAlpha.900">
+                            <VStack>
+                                <Field.Root required>
+                                    <Field.Label>
+                                        First Name <Field.RequiredIndicator />
+                                    </Field.Label>
+                                    <Input placeholder="Michael" borderColor="white"/>
+                                </Field.Root>
+                                <Field.Root required>
+                                    <Field.Label>
+                                        Last Name <Field.RequiredIndicator />
+                                    </Field.Label>
+                                    <Input placeholder="Bobrowski" borderColor="white" />
+                                </Field.Root>
+                            </VStack>
+                        </Box>
+                    </Steps.Content>
+
+                    <Steps.CompletedContent>
+                        <Text color="whiteAlpha.900">Registering...</Text>
+                    </Steps.CompletedContent>
+                </Center>
+
+                <Center>
+                    <ButtonGroup size="sm" varient="outline" colorPalette="gray">
+                        <Steps.PrevTrigger asChild>
+                            <Button>Prev</Button>
+                        </Steps.PrevTrigger>
+                        <Steps.NextTrigger asChild>
+                            <Button>Next</Button>
+                        </Steps.NextTrigger>
+                    </ButtonGroup>
+                </Center>
             </Steps.Root>
         </Container>
     )

@@ -32,7 +32,7 @@ const Banner = () => {
                     <Text
                         fontSize="120px"
                         fontWeight="1000"
-                        color="#0A2472"
+                        color="#000000"
                         lineHeight="1"
                         textAlign="center"
                         fontFamily="sans-serif"
