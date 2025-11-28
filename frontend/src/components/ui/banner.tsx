@@ -20,7 +20,7 @@ const Banner = () => {
         >
             <Box position="absolute" w="full" h="full" overflow="hidden" borderRadius="md">
                 <Liquid
-                    baseColor={[0, 0.5, 1]}
+                    baseColor={[0, 0.1, 1]}
                     speed={0.3}
                     amplitude={0.51}
                     interactive={false}

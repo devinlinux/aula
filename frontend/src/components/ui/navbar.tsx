@@ -44,7 +44,7 @@ const Navbar = ({ path, ...props }) => {
             position="fixed"
             as="nav"
             w="70%"
-            bg="#20202399"
+            bg="#00000099"
             zIndex={3}
             top={2}
             pt={1}

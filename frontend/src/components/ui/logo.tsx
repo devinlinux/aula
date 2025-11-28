@@ -22,7 +22,7 @@ const Logo = () => {
     const img = "/images/logo_placeholder.png"
 
     return (
-        <Link href="/">
+        <Link href="/home">
             <LogoBox>
                 <Image src={img} width={30} height={30} alt="logo" />
                 <Text
