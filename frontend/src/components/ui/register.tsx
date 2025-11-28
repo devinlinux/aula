@@ -13,6 +13,7 @@ import {
     Input,
 } from "@chakra-ui/react"
 import { FaUpload } from "react-icons/fa"
+import { PasswordInput } from "@/components/ui/password-input"
 
 const Register = () => {
     const steps = [ "Name", "Login Info", "School Info", "Profile Picture", "Submit" ]
@@ -31,6 +32,7 @@ const Register = () => {
                 </Steps.List>
 
                 <Center>
+
                     <Steps.Content key={0} index={0}>
                         <Box color="whiteAlpha.900">
                             <VStack>
@@ -50,9 +52,31 @@ const Register = () => {
                         </Box>
                     </Steps.Content>
 
+                    <Steps.Content key={1} index={1}>
+                        <Box color="whiteAlpha.900">
+                            <VStack>
+                                <Field.Root required>
+                                    <Field.Label>
+                                        Email <Field.RequiredIndicator />
+                                    </Field.Label>
+                                    <Input placeholder="me@example.com" type="email" borderColor="white" />
+                                </Field.Root>
+                                <Field.Root required>
+                                    <Field.Label>
+                                        Password <Field.RequiredIndicator />
+                                    </Field.Label>
+                                    <PasswordInput
+                                        placeholder="Enter your password"
+                                    />
+                                </Field.Root>
+                            </VStack>
+                        </Box>
+                    </Steps.Content>
+
                     <Steps.CompletedContent>
                         <Text color="whiteAlpha.900">Registering...</Text>
                     </Steps.CompletedContent>
+
                 </Center>
 
                 <Center>
