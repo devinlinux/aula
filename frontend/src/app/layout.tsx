@@ -3,8 +3,8 @@ import Provider from "./provider"
 import MainWrapper from "./main-wrapper"
 
 export const metadata: Metadata = {
-  title: "INSERT_TITLE_HERE",
-  description: "INSERT_DESCRIPTION_HERE",
+  title: "Aula",
+  description: "Prototype study coordination app for university students",
 };
 
 export default function RootLayer(props: { children: React.ReactNode }) {
