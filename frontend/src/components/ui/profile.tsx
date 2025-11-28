@@ -65,15 +65,15 @@ const Profile = () => {
                 {imageSrc ? (
                     <Image
                         src={imageSrc}
-                        width={20}
-                        height={20}
+                        width={30}
+                        height={30}
                         alt="profile picture"
                     />
                 ) : (
                     <Image
                         src="/images/default_profile.jpg"
-                        width={20}
-                        height={20}
+                        width={30}
+                        height={30}
                         alt="default profile"
                     />
                 )}
