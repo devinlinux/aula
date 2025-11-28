@@ -40,13 +40,19 @@ const Register = () => {
                                     <Field.Label>
                                         First Name <Field.RequiredIndicator />
                                     </Field.Label>
-                                    <Input placeholder="Michael" borderColor="white"/>
+                                    <Input
+                                        placeholder="Michael"
+                                        borderColor="white"
+                                    />
                                 </Field.Root>
                                 <Field.Root required>
                                     <Field.Label>
                                         Last Name <Field.RequiredIndicator />
                                     </Field.Label>
-                                    <Input placeholder="Bobrowski" borderColor="white" />
+                                    <Input
+                                        placeholder="Bobrowski"
+                                        borderColor="white"
+                                    />
                                 </Field.Root>
                             </VStack>
                         </Box>
@@ -59,7 +65,11 @@ const Register = () => {
                                     <Field.Label>
                                         Email <Field.RequiredIndicator />
                                     </Field.Label>
-                                    <Input placeholder="me@example.com" type="email" borderColor="white" />
+                                    <Input
+                                        placeholder="me@example.com"
+                                        type="email"
+                                        borderColor="white"
+                                    />
                                 </Field.Root>
                                 <Field.Root required>
                                     <Field.Label>
@@ -67,6 +77,31 @@ const Register = () => {
                                     </Field.Label>
                                     <PasswordInput
                                         placeholder="Enter your password"
+                                    />
+                                </Field.Root>
+                            </VStack>
+                        </Box>
+                    </Steps.Content>
+
+                    <Steps.Content key={2} index={2}>
+                        <Box color="whiteAlpha.900">
+                            <VStack>
+                                <Field.Root required>
+                                    <Field.Label>
+                                        Major <Field.RequiredIndicator />
+                                    </Field.Label>
+                                    <Input
+                                        placeholder="Computer Engineering"
+                                        borderColor="white"
+                                    />
+                                </Field.Root>
+                                <Field.Root required>
+                                    <Field.Label>
+                                        Graduation Year <Field.RequiredIndicator />
+                                    </Field.Label>
+                                    <Input
+                                        placeholder="2029"
+                                        borderColor="white"
                                     />
                                 </Field.Root>
                             </VStack>
