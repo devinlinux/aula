@@ -112,6 +112,9 @@ const Register = () => {
             description: "Registration complete!",
             duration: 2000,
         })
+
+        localStorage.setItem("email", registration.email)
+        window.location.replace("http://localhost:3000/home")
     }
 
     return (
@@ -272,7 +275,7 @@ const Register = () => {
                         </Steps.PrevTrigger>
                         <Steps.NextTrigger asChild>
                             <Button onClick={submitAtEnd}>
-                                {step.value === steps.length - 1 ? "Submit" : "Next"}
+                                {step.value >= steps.length - 1 ? "Submit" : "Next"}
                             </Button>
                         </Steps.NextTrigger>
                     </ButtonGroup>
