@@ -40,7 +40,7 @@ public class GroupController {
         Group group = this.groupService.createGroup(request.intoGroup());
         User creator = this.userService.getUserByEmail(request.creator());
 
-        group.addMember(creator.getFirstName() + creator.getLastName());
+        group.addMember(creator.getFirstName() + " " + creator.getLastName());
         return ResponseEntity.ok().body(this.groupService.createGroup(group));
     }
 
@@ -65,7 +65,7 @@ public class GroupController {
         Group group = this.groupService.getGroupById(id);
         User user = this.userService.getUserByEmail(email);
 
-        group.addMember(user.getFirstName() + user.getLastName());
+        group.addMember(user.getFirstName() + " " + user.getLastName());
         this.groupService.createGroup(group);  //  essentially just saving
         return ResponseEntity.ok().body(Map.of("message", "Successfully added to group"));
     }
