@@ -228,7 +228,8 @@ const Register = () => {
                         <Box color="whiteAlpha.900">
                             <VStack>
                                 <FileUpload.Root
-                                    required maxFiles={1}
+                                    required
+                                    maxFiles={1}
                                     accept="image/*"
                                     onFileChange={(e) => setProfilePicture(e.acceptedFiles[0] ?? null)}
                                 >

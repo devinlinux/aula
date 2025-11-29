@@ -75,11 +75,6 @@ export const CreateGroupItem = () => {
                                     <CreateGroup />
                                 </Dialog.Body>
 
-                                <Dialog.Footer>
-                                    <Dialog.ActionTrigger asChild>
-                                        <Button color="whiteAlpha.900">Create</Button>
-                                    </Dialog.ActionTrigger>
-                                </Dialog.Footer>
                                 <Dialog.CloseTrigger asChild>
                                     <CloseButton size="sm" />
                                 </Dialog.CloseTrigger>

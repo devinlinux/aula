@@ -3,8 +3,13 @@
 import {
     Container,
     Box,
+    VStack,
     Field,
+    Input,
+    InputGroup,
     FileUpload,
+    Button,
+    CloseButton,
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { FaUpload } from "react-icons/fa"
@@ -49,11 +54,13 @@ const CreateGroup = () => {
         }
 
         const formData = new FormData()
-        formData.append("id", createResponse.json().group.id)
+
+        const responseData = await createResponse.json()
+        formData.append("id", responseData.id)
         formData.append("file", bannerImage)
 
         try {
-            const uploadResponse = await fetch("http://localhost:8080/api/gorups/upload-banner-image", {
+            const uploadResponse = await fetch("http://localhost:8080/api/groups/upload-banner-image", {
                 method: "POST",
                 body: formData,
             })
@@ -85,7 +92,79 @@ const CreateGroup = () => {
         <Container>
             <Toaster />
 
-
+            <Box color="whiteAlpha.900">
+                <VStack>
+                    <Field.Root required>
+                        <Field.Label>
+                            Name <Field.RequiredIndicator />
+                        </Field.Label>
+                        <Input
+                            placeholder="St. Thomas' Study Group"
+                            borderColor="white"
+                            onChange={(e) =>
+                                setGroup({ ...group, name: e.target.value })
+                            }
+                        />
+                    </Field.Root>
+                    <Field.Root required>
+                        <Field.Label>
+                            Class <Field.RequiredIndicator />
+                        </Field.Label>
+                        <Input
+                            placeholder="THL1000"
+                            borderColor="white"
+                            onChange={(e) =>
+                                setGroup({ ...group, associatedClass: e.target.value })
+                            }
+                        />
+                    </Field.Root>
+                    <Field.Root required>
+                        <Field.Label>
+                            Meeting Times <Field.RequiredIndicator />
+                        </Field.Label>
+                        <Input
+                            placeholder="MWF 9-10 PM"
+                            borderColor="white"
+                            onChange={(e) =>
+                                setGroup({ ...group, times: e.target.value })
+                            }
+                        />
+                    </Field.Root>
+                    <FileUpload.Root
+                        required
+                        maxFiles={1}
+                        accept="image/*"
+                        onFileChange={(e) => setBannerImage(e.acceptedFiles[0] ?? null)}
+                    >
+                        <FileUpload.HiddenInput />
+                        <FileUpload.Label>Upload Banner Image</FileUpload.Label>
+                        <InputGroup
+                            startElement={<FiFileMinus />}
+                            endElement={
+                                <FileUpload.ClearTrigger asChild>
+                                    <CloseButton
+                                        me="-1"
+                                        size="xs"
+                                        variant="plain"
+                                        focusVisibleRing="inside"
+                                        focusRingWidth="2px"
+                                        pointerEvents="auto"
+                                    />
+                                </FileUpload.ClearTrigger>
+                            }
+                        >
+                            <Input asChild>
+                                <FileUpload.Trigger>
+                                    <FileUpload.FileText lineClamp={1} />
+                                </FileUpload.Trigger>
+                            </Input>
+                        </InputGroup>
+                    </FileUpload.Root>
+                    <Button onClick={submitAll}>
+                        Create
+                    </Button>
+                </VStack>
+            </Box>
         </Container>
     )
 }
