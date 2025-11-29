@@ -19,7 +19,7 @@ import {
 import { useState } from "react"
 import { FaUpload } from "react-icons/fa"
 import { FiFileMinus } from "react-icons/fi"
-import { toaster } from "@/components/ui/toaster"
+import { Toaster, toaster } from "@/components/ui/toaster"
 import { PasswordInput } from "@/components/ui/password-input"
 
 const Register = () => {
@@ -116,6 +116,7 @@ const Register = () => {
 
     return (
         <Container>
+            <Toaster />
             <Steps.RootProvider value={step} count={steps.length}>
                 <Steps.List>
                     {steps.map((step, index) => (
