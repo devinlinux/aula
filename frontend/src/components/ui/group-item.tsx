@@ -16,7 +16,7 @@ import CreateGroup from "@/components/ui/create-group"
 
 const GroupItem = ({ id, name, associatedClass, times, bannerImage }) => {
     return (
-        <Box w="100%" textAlign="center" color="white">
+        <Box w="100%" textAlign="center" color="white" p={5}>
             <LinkBox
                 as={NextLink}
                 href={`/groups/${id}`}
