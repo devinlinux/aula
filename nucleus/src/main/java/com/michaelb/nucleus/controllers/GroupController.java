@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 
 import com.michaelb.nucleus.models.Group;
 import com.michaelb.nucleus.services.GroupService;
+import com.michaelb.nucleus.dto.CreateGroupDTO;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -30,8 +31,8 @@ public class GroupController {
     }
 
     @PostMapping("/create-group")
-    public ResponseEntity<Group> createGroup(@RequestBody Group request) {
-        return ResponseEntity.ok().body(this.service.createGroup(request));
+    public ResponseEntity<Group> createGroup(@RequestBody CreateGroupDTO request) {
+        return ResponseEntity.ok().body(this.service.createGroup(request.intoGroup()));
     }
 
     @GetMapping("/get-all-groups")
