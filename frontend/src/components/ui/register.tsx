@@ -14,14 +14,20 @@ import {
     Input,
     InputGroup,
     FileUpload,
+    useSteps,
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { FaUpload } from "react-icons/fa"
 import { FiFileMinus } from "react-icons/fi"
+import { toaster } from "@/components/ui/toaster"
 import { PasswordInput } from "@/components/ui/password-input"
 
 const Register = () => {
     const steps = [ "Name", "Login Info", "School Info", "Profile Picture" ]
+    const step = useSteps({
+        defaultStep: 1,
+        count: steps.length,
+    })
     const [registration, setRegistration] = useState({
         firstName: "",
         lastName: "",
@@ -32,6 +38,14 @@ const Register = () => {
 
     const [profilePicture, setProfilePicture] = useState<File | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const submitAtEnd = () => {
+        console.log("ATTEMPTING SUBMIT")
+        //  TODO something is wrong and submitAll is not getting called or something
+        if (step.value === steps.length) {
+            submitAll()
+        }
+    }
 
     const submitAll = async () => {
         setIsSubmitting(true)
@@ -49,8 +63,21 @@ const Register = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registerPayload),
             })
-            return
+
+            if (!registerResponse.ok) {
+                toaster.create({
+                    type: "error",
+                    description: "Registration failed, please try again",
+                    duration: 2000,
+                })
+                return
+            }
         } catch (err) {
+            toaster.create({
+                type: "error",
+                description: "Unable to connect to the server",
+                duration: 2000,
+            })
             return
         }
 
@@ -59,7 +86,7 @@ const Register = () => {
         formData.append("file", profilePicture)
 
         try {
-            const uploadRes = await fetch(
+            const uploadResponse = await fetch(
                 "http://localhost:8080/api/users/upload-profile-picture",
                 {
                     method: "POST",
@@ -67,19 +94,33 @@ const Register = () => {
                 }
             )
 
-            if (!uploadRes.ok) {
-
+            if (!uploadResponse.ok) {
+                toaster.create({
+                    type: "error",
+                    description: "Failed to upload profile picture",
+                    duration: 2000,
+                })
             }
         } catch (err) {
-
+            toaster.create({
+                type: "error",
+                description: "Failed to upload profile picture",
+                duration: 2000,
+            })
         }
+
+        toaster.create({
+            type: "success",
+            description: "Registration complete!",
+            duration: 2000,
+        })
 
         setIsSubmitting(false)
     }
 
     return (
         <Container>
-            <Steps.Root count={steps.length}>
+            <Steps.RootProvider value={step} count={steps.length} onChange={(step) => setCurrentStep(step)}>
                 <Steps.List>
                     {steps.map((step, index) => (
                         <Steps.Item key={index} index={index} title={step}>
@@ -102,6 +143,9 @@ const Register = () => {
                                     <Input
                                         placeholder="Michael"
                                         borderColor="white"
+                                        onChange={(e) =>
+                                            setRegistration({ ...registration, firstName: e.target.value })
+                                        }
                                     />
                                 </Field.Root>
                                 <Field.Root required>
@@ -111,6 +155,9 @@ const Register = () => {
                                     <Input
                                         placeholder="Bobrowski"
                                         borderColor="white"
+                                        onChange={(e) =>
+                                            setRegistration({ ...registration, lastName: e.target.value })
+                                        }
                                     />
                                 </Field.Root>
                             </VStack>
@@ -128,6 +175,9 @@ const Register = () => {
                                         placeholder="me@example.com"
                                         type="email"
                                         borderColor="white"
+                                        onChange={(e) =>
+                                            setRegistration({ ...registration, email: e.target.value })
+                                        }
                                     />
                                 </Field.Root>
                                 <Field.Root required>
@@ -136,6 +186,9 @@ const Register = () => {
                                     </Field.Label>
                                     <PasswordInput
                                         placeholder="Enter your password"
+                                        onChange={(e) =>
+                                            setRegistration({ ...registration, password: e.target.value })
+                                        }
                                     />
                                 </Field.Root>
                             </VStack>
@@ -152,6 +205,9 @@ const Register = () => {
                                     <Input
                                         placeholder="Computer Engineering"
                                         borderColor="white"
+                                        onChange={(e) =>
+                                            setRegistration({ ...registration, major: e.target.value })
+                                        }
                                     />
                                 </Field.Root>
                                 <Field.Root required>
@@ -161,6 +217,9 @@ const Register = () => {
                                     <Input
                                         placeholder="2029"
                                         borderColor="white"
+                                        onChange={(e) =>
+                                            setRegistration({ ...registration, graduationYear: e.target.value })
+                                        }
                                     />
                                 </Field.Root>
                             </VStack>
@@ -170,7 +229,11 @@ const Register = () => {
                     <Steps.Content key={3} index={3}>
                         <Box color="whiteAlpha.900">
                             <VStack>
-                                <FileUpload.Root required maxFiles={1} accept="image/*">
+                                <FileUpload.Root
+                                    required maxFiles={1}
+                                    accept="image/*"
+                                    onFileChange={(e) => setProfilePicture(e.acceptedFiles[0] ?? null)}
+                                >
                                     <FileUpload.HiddenInput />
                                     <FileUpload.Label>Upload Profile Picture</FileUpload.Label>
                                     <InputGroup
@@ -211,11 +274,13 @@ const Register = () => {
                             <Button>Prev</Button>
                         </Steps.PrevTrigger>
                         <Steps.NextTrigger asChild>
-                            <Button>Next</Button>
+                            <Button onClick={submitAtEnd}>
+                                {step.value === steps.length ? "Submit" : "Next"}
+                            </Button>
                         </Steps.NextTrigger>
                     </ButtonGroup>
                 </Center>
-            </Steps.Root>
+            </Steps.RootProvider>
         </Container>
     )
 }
