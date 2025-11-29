@@ -12,6 +12,7 @@ import { FaUserPlus, FaUserGraduate } from "react-icons/fa"
 import Banner from "@/components/ui/banner"
 import Clock from "@/components/ui/clock"
 import Register from "@/components/ui/register"
+import Login from "@/components/ui/login"
 
 const Index = () => {
     return (
@@ -56,11 +57,10 @@ const Index = () => {
                         </Tabs.List>
 
                         <Tabs.Content value="register">
-                            <Box>
-                            </Box>
-                        </Tabs.Content>
-                        <Tabs.Content value="register">
                             <Register />
+                        </Tabs.Content>
+                        <Tabs.Content value="login">
+                            <Login />
                         </Tabs.Content>
                     </Tabs.Root>
                 </Container>
