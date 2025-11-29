@@ -84,7 +84,7 @@ const Login = () => {
                             <Field.Label>
                                 Password <Field.RequiredIndicator />
                             </Field.Label>
-                            <Input
+                            <PasswordInput
                                 placeholder="Enter your password"
                                 onChange={(e) =>
                                     setLogin({ ...login, password: e.target.value })
