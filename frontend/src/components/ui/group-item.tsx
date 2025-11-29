@@ -37,7 +37,7 @@ const GroupItem = ({ id, name, associatedClass, times, bannerImage }) => {
                         {name}
                     </Text>
                 </LinkOverlay>
-                <Text fontSize={14}>
+                <Text fontSize={14} pt={2}>
                     {associatedClass} | {times}
                 </Text>
             </LinkBox>
@@ -83,7 +83,7 @@ export const CreateGroupItem = () => {
                     </Portal>
                 </Dialog.Root>
             </Box>
-            <Text fontSize={14}>
+            <Text fontSize={14} pt={2}>
                 Coordinate studying with your friends!
             </Text>
         </Box>

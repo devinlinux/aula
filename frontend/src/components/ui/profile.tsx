@@ -32,16 +32,14 @@ const Profile = () => {
 
         const fetchProfilePicture = async () => {
             try {
-                const res = await fetch(
-                    `http://localhost:8080/api/users/profile-picture/${email}`
-                )
-                if (!res.ok) return
+                const res = await fetch(`http://localhost:8080/api/users/profile-picture/${email}`)
+                if (!res.ok) throw new Error("failed to fetch profile picture")
 
                 const blob = await res.blob()
                 const url = URL.createObjectURL(blob)
                 setImageSrc(url)
             } catch (err) {
-                console.error(err)
+                return "/images/default_profile.jpg"
             }
         }
 
