@@ -43,7 +43,13 @@ public class UserController {
         if (request.password() == null || request.password().isEmpty())
             throw new RuntimeException("register");
 
-        if (this.service.getUserByEmail(request.email()) != null)
+        User exists = null;
+        try {
+            exists = this.service.getUserByEmail(request.email());
+        } catch (Exception e) {
+            //  do nothing
+        }
+        if (exists != null)
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(Map.of("message", "User already exists"));
