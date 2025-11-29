@@ -37,7 +37,11 @@ const Login = () => {
                 })
                 return
             }
+
+            const loginData = await loginResponse.json()
+            localStorage.setItem("secret", loginData.secret)
         } catch (err) {
+            console.log(err)
             toaster.create({
                 type: "error",
                 description: "Unable to connect to the server",

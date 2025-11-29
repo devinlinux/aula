@@ -67,6 +67,9 @@ const Register = () => {
                 })
                 return
             }
+
+            const loginData = await loginResponse.json()
+            localStorage.setItem("secret", loginData.secret)
         } catch (err) {
             toaster.create({
                 type: "error",

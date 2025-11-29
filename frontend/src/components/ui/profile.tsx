@@ -48,8 +48,6 @@ const Profile = () => {
         fetchProfilePicture()
     }, [email])
 
-    console.log("IMAGE SRC: " + imageSrc)
-
     return (
         <Link href="/profile">
             <LogoBox>
