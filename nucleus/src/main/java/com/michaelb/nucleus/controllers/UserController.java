@@ -56,8 +56,9 @@ public class UserController {
         User user = request.intoUser();
         User saved = this.service.registerUser(user);
 
-        this.activeSessions.put(saved.getEmail(), true);
-        return ResponseEntity.ok().body(new LoginResponseDTO(saved.intoDTO(), UUID.randomUUID().toString()));
+        String secret = UUID.randomUUID().toString();
+        this.activeSessions.put(secret, true);
+        return ResponseEntity.ok().body(new LoginResponseDTO(saved.intoDTO(), secret));
     }
 
     @PostMapping("/login")
@@ -68,15 +69,15 @@ public class UserController {
         if (!valid)
             return ResponseEntity.notFound().build();
         else {
-            this.activeSessions.put(user.getEmail(), true);
-            return ResponseEntity.ok().body(new LoginResponseDTO(user.intoDTO(), UUID.randomUUID().toString()));
+            String secret = UUID.randomUUID().toString();
+            this.activeSessions.put(secret, true);
+            return ResponseEntity.ok().body(new LoginResponseDTO(user.intoDTO(), secret));
         }
     }
 
-    @PostMapping("/logout/{email}")
-    public ResponseEntity<String> logout(@PathVariable String email) {
-        User user = this.service.getUserByEmail(email);
-        this.activeSessions.remove(user.getEmail());
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestBody String secret) {
+        this.activeSessions.remove(secret);
         return ResponseEntity.ok().body("Successfully logged out");
     }
 
