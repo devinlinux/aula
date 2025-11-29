@@ -76,7 +76,7 @@ export const CreateGroupItem = () => {
                                 </Dialog.Body>
 
                                 <Dialog.CloseTrigger asChild>
-                                    <CloseButton size="sm" />
+                                    <CloseButton size="sm" color="white" _hover={{ bg: "none" }}/>
                                 </Dialog.CloseTrigger>
                             </Dialog.Content>
                         </Dialog.Positioner>
