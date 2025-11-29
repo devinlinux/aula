@@ -41,7 +41,7 @@ const Index = () => {
                 </Flex>
             </Box>
             <Container maxW="container.lg" pt={14}>
-                <Banner />
+                <Banner text="AULA" />
             </Container>
 
             <Container maxW="container.lg">

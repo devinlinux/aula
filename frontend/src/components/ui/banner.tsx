@@ -7,7 +7,7 @@ import {
 } from '@chakra-ui/react'
 import Liquid from "@/components/animations/liquid"
 
-const Banner = () => {
+const Banner = ({ text, fontSize = "120px", letterSpacing = "16px" }) => {
     return (
         <Box
             position="relative"
@@ -30,16 +30,16 @@ const Banner = () => {
             <Box zIndex="2" w="full">
                 <Center>
                     <Text
-                        fontSize="120px"
+                        fontSize={fontSize}
                         fontWeight="1000"
                         color="#000000"
                         lineHeight="1"
                         textAlign="center"
                         fontFamily="sans-serif"
                         textTransform="uppercase"
-                        letterSpacing="16px"
+                        letterSpacing={letterSpacing}
                     >
-                        AULA
+                        {text}
                     </Text>
                 </Center>
             </Box>

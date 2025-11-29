@@ -11,17 +11,18 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
 
     const plainRoutes = ['/']
     const plain = plainRoutes.includes(pathname)
+    const showSilk = /^\/[^/]+$/.test(pathname)
 
     return (
         <Box>
-            {!plain && (
+            {!plain && showSilk && (
                 <Box
                     position="fixed"
                     top={0}
                     left={0}
                     w="100%"
                     h="100%"
-                    zIndex={-1}
+                    zIndex={-2}
                 >
                     <Silk
                         speed={3}

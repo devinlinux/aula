@@ -16,7 +16,7 @@ const Groups = () => {
     const [groups, setGroups] = useState([])
     const size = 9
 
-    const fetchBannerImage = async(id) => {
+    const fetchBannerImage = async (id) => {
         try {
             const res = await fetch(`http://localhost:8080/api/groups/banner-image/${id}`)
             if (!res.ok) throw new Error("failed to fetch banner image")
