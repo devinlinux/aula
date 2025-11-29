@@ -1,9 +1,10 @@
 "use client"
 
-import { Box } from "@chakra-ui/react"
+import { Box, Flex } from "@chakra-ui/react"
 import { usePathname } from "next/navigation"
 import Silk from "@/components/animations/silk"
 import Navbar from "@/components/ui/navbar"
+import Footer from "@/components/ui/footer"
 
 export default function MainWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
@@ -36,6 +37,17 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
                 {!plain && <Navbar path={pathname} />}
 
                 {children}
+
+                <Box
+                    as="footer"
+                    position="absolute"
+                    textAlign="center"
+                    bottom={2}
+                    w="100%"
+                    zIndex={3}
+                >
+                    <Footer />
+                </Box>
             </Box>
         </Box>
     )
