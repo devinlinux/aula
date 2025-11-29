@@ -15,12 +15,67 @@ import {
     InputGroup,
     FileUpload,
 } from "@chakra-ui/react"
+import { useState } from "react"
 import { FaUpload } from "react-icons/fa"
 import { FiFileMinus } from "react-icons/fi"
 import { PasswordInput } from "@/components/ui/password-input"
 
 const Register = () => {
-    const steps = [ "Name", "Login Info", "School Info", "Profile Picture", "Submit" ]
+    const steps = [ "Name", "Login Info", "School Info", "Profile Picture" ]
+    const [registration, setRegistration] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        graduationYear: "",
+    })
+
+    const [profilePicture, setProfilePicture] = useState<File | null>(null)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const submitAll = async () => {
+        setIsSubmitting(true)
+
+        const registerPalyload = {
+            ...registration,
+            graduationYear: Number(registration.graduationYear),
+        }
+
+        let registerResponse
+
+        try {
+            registerResponse = await fetch ("http://localhost:8080/api/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(registerPayload),
+            })
+            return
+        } catch (err) {
+            return
+        }
+
+        const formData = new FormData()
+        formData.append("email", registration.email)
+        formData.append("file", profilePicture)
+
+        try {
+            const uploadRes = await fetch(
+                "http://localhost:8080/api/users/upload-profile-picture",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            )
+
+            if (!uploadRes.ok) {
+
+            }
+        } catch (err) {
+
+        }
+
+        setIsSubmitting(false)
+    }
 
     return (
         <Container>
@@ -115,7 +170,7 @@ const Register = () => {
                     <Steps.Content key={3} index={3}>
                         <Box color="whiteAlpha.900">
                             <VStack>
-                                <FileUpload.Root required maxFiles={1}>
+                                <FileUpload.Root required maxFiles={1} accept="image/*">
                                     <FileUpload.HiddenInput />
                                     <FileUpload.Label>Upload Profile Picture</FileUpload.Label>
                                     <InputGroup
@@ -135,7 +190,7 @@ const Register = () => {
                                     >
                                         <Input asChild>
                                             <FileUpload.Trigger>
-                                                <Text color="fg.muted">Select File</Text>
+                                                <FileUpload.FileText lineClamp={1} />
                                             </FileUpload.Trigger>
                                         </Input>
                                     </InputGroup>

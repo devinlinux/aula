@@ -64,8 +64,6 @@ const Navbar = ({ path, ...props }) => {
                     spacing={4}
                     display={{ base: "none", md: "flex" }}
                 >
-                    <LinkItem href="/login" path={path}>Login</LinkItem>
-                    <LinkItem href="/register" path={path}>Register</LinkItem>
                     <LinkItem href="/groups" path={path}>Groups</LinkItem>
                     <LinkItem href="/forum" path={path}>Forum</LinkItem>
                 </Stack>
