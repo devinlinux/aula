@@ -37,6 +37,10 @@ public class Group {
         this.bannerImage = bannerImage;
     }
 
+    public void addMember(String name) {
+        this.members.add(name);
+    }
+
     public void setId(String id) {
         this.id = id;
     }

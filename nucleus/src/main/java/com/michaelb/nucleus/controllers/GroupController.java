@@ -4,7 +4,9 @@ package com.michaelb.nucleus.controllers;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
+import com.michaelb.nucleus.services.UserService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 
 import com.michaelb.nucleus.models.Group;
+import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.GroupService;
 import com.michaelb.nucleus.dto.CreateGroupDTO;
 
@@ -24,36 +27,57 @@ import com.michaelb.nucleus.dto.CreateGroupDTO;
 @RequestMapping("/api/groups")
 public class GroupController {
 
-    private final GroupService service;
+    private final GroupService groupService;
+    private final UserService userService;
 
-    public GroupController(GroupService service) {
-        this.service = service;
+    public GroupController(GroupService groupService, UserService userService) {
+        this.groupService = groupService;
+        this.userService = userService;
     }
 
     @PostMapping("/create-group")
     public ResponseEntity<Group> createGroup(@RequestBody CreateGroupDTO request) {
-        return ResponseEntity.ok().body(this.service.createGroup(request.intoGroup()));
+        Group group = this.groupService.createGroup(request.intoGroup());
+        User creator = this.userService.getUserByEmail(request.creator());
+
+        group.addMember(creator.getFirstName() + creator.getLastName());
+        return ResponseEntity.ok().body(this.groupService.createGroup(group));
     }
 
     @GetMapping("/get-all-groups")
-    public ResponseEntity<Page<Group>> getAllGroups(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value="size", defaultValue="10") int size) {
-        return ResponseEntity.ok().body(this.service.getAllGroups(page, size));
+    public ResponseEntity<Page<Group>> getAllGroups(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value="size", defaultValue="10") int size)
+    {
+        return ResponseEntity.ok().body(this.groupService.getAllGroups(page, size));
     }
 
     @GetMapping("group/{id}")
     public ResponseEntity<Group> getGroup(@PathVariable String id) {
-        return ResponseEntity.ok().body(this.service.getGroupById(id));
+        return ResponseEntity.ok().body(this.groupService.getGroupById(id));
+    }
+
+    @PostMapping("/add-member")
+    public ResponseEntity<Map<String, String>> addMemberToGroup(
+            @RequestParam(value = "id") String id,
+            @RequestParam(value = "email") String email)
+    {
+        Group group = this.groupService.getGroupById(id);
+        User user = this.userService.getUserByEmail(email);
+
+        group.addMember(user.getFirstName() + user.getLastName());
+        this.groupService.createGroup(group);  //  essentially just saving
+        return ResponseEntity.ok().body(Map.of("message", "Successfully added to group"));
     }
 
     @PostMapping("/upload-banner-image")
     public ResponseEntity<String> uploadBannerImage(@RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
-        Group group = this.service.getGroupById(id);
-        return ResponseEntity.ok().body(this.service.uploadBannerImage(id, file));
+        return ResponseEntity.ok().body(this.groupService.uploadBannerImage(id, file));
     }
 
     @GetMapping("/banner-image/{id}")
     public ResponseEntity<byte[]> getBannerImage(@PathVariable String id) throws IOException {
-        Group group = this.service.getGroupById(id);
+        Group group = this.groupService.getGroupById(id);
         return ResponseEntity.ok().body(Files.readAllBytes(Path.of(group.getBannerImage())));
     }
 
