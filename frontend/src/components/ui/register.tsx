@@ -53,7 +53,7 @@ const Register = () => {
         let registerResponse
 
         try {
-            registerResponse = await fetch ("http://localhost:8080/api/users/register", {
+            registerResponse = await fetch("http://localhost:8080/api/users/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registerPayload),
@@ -62,14 +62,14 @@ const Register = () => {
             if (!registerResponse.ok) {
                 toaster.create({
                     type: "error",
-                    description: "Registration failed, please try again",
+                    description: "Registration failed, please try again later",
                     duration: 2000,
                 })
                 return
             }
 
-            const loginData = await loginResponse.json()
-            localStorage.setItem("secret", loginData.secret)
+            const registerData = await registerResponse.json()
+            localStorage.setItem("secret", registerData.secret)
         } catch (err) {
             toaster.create({
                 type: "error",
@@ -84,9 +84,7 @@ const Register = () => {
         formData.append("file", profilePicture)
 
         try {
-            const uploadResponse = await fetch(
-                "http://localhost:8080/api/users/upload-profile-picture",
-                {
+            const uploadResponse = await fetch("http://localhost:8080/api/users/upload-profile-picture", {
                     method: "POST",
                     body: formData,
                 }

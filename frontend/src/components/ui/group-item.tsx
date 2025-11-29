@@ -12,6 +12,7 @@ import {
     Text,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
+import CreateGroup from "@/components/ui/create-group"
 
 const GroupItem = ({ id, name, associatedClass, times, bannerImage }) => {
     return (
@@ -65,18 +66,18 @@ export const CreateGroupItem = () => {
                     <Portal>
                         <Dialog.Backdrop />
                         <Dialog.Positioner>
-                            <Dialog.Content>
+                            <Dialog.Content bgColor="#202023" color="whiteAlpha.900">
                                 <Dialog.Header>
                                     <Dialog.Title>Create Group</Dialog.Title>
                                 </Dialog.Header>
 
                                 <Dialog.Body>
-
+                                    <CreateGroup />
                                 </Dialog.Body>
 
                                 <Dialog.Footer>
                                     <Dialog.ActionTrigger asChild>
-                                        <Button variant="outline">Create</Button>
+                                        <Button color="whiteAlpha.900">Create</Button>
                                     </Dialog.ActionTrigger>
                                 </Dialog.Footer>
                                 <Dialog.CloseTrigger asChild>
