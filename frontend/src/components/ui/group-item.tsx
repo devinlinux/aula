@@ -11,6 +11,7 @@ import NextLink from "next/link"
 import { Global } from "@emotion/react"
 
 const GroupItem = ({ id, name, associatedClass, times, bannerImage }) => {
+    <GroupItemStyle />
     <Box w="100%" textAlign="center">
         <LinkBox
             as={NextLink}
