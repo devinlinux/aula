@@ -47,7 +47,7 @@ public class UserController {
         try {
             exists = this.service.getUserByEmail(request.email());
         } catch (Exception e) {
-            //  do nothing
+            //  do nothing :)
         }
         if (exists != null)
             return ResponseEntity

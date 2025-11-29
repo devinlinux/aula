@@ -19,7 +19,7 @@ public class Group {
     private String id;
     private String name;
     private String associatedClass;
-    private ArrayList<MeetingTime> times;
+    private ArrayList<String> times;
     private ArrayList<String> members;
     private String creator;
     private String bannerImage;
@@ -28,7 +28,7 @@ public class Group {
         this(null, null, null, null, null, null);
     }
 
-    public Group(String name, String associatedClass, ArrayList<MeetingTime> times, ArrayList<String> members, String creator, String bannerImage) {
+    public Group(String name, String associatedClass, ArrayList<String> times, ArrayList<String> members, String creator, String bannerImage) {
         this.name = name;
         this.associatedClass = associatedClass;
         this.times = times;
@@ -61,11 +61,11 @@ public class Group {
         return this.associatedClass;
     }
 
-    public void setTimes(ArrayList<MeetingTime> times) {
+    public void setTimes(ArrayList<String> times) {
         this.times = times;
     }
 
-    public ArrayList<MeetingTime> getTimes() {
+    public ArrayList<String> getTimes() {
         return this.times;
     }
 

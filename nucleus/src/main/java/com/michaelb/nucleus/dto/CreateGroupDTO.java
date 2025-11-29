@@ -4,7 +4,6 @@ package com.michaelb.nucleus.dto;
 import java.util.ArrayList;
 
 import com.michaelb.nucleus.models.Group;
-import com.michaelb.nucleus.models.MeetingTime;
 
 public record CreateGroupDTO(String name, String associatedClass, ArrayList<MeetingTime> times, String creator) {
     public Group intoGroup() {
