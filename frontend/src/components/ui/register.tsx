@@ -40,14 +40,11 @@ const Register = () => {
 
     const submitAtEnd = () => {
         if (step.value === steps.length - 1)  {
-            console.log("ATTEMPTING SUBMIT")
             submitAll()
         }
     }
 
     const submitAll = async () => {
-        console.log("SUBMIT ALL")
-
         const registerPayload = {
             ...registration,
             graduationYear: Number(registration.graduationYear),

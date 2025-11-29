@@ -51,6 +51,9 @@ const Login = () => {
             description: "Login complete!",
             duration: 2000,
         })
+
+        localStorage.setItem("email", login.email)
+        window.location.replace("http://localhost:3000/home")
     }
 
     return (
