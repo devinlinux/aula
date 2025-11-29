@@ -5,9 +5,11 @@ import {
     Box,
     Center,
     SimpleGrid,
+    ButtonGroup,
     Button,
 } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
+import { FaCaretLeft, FaCaretRight } from "react-icons/fa"
 import { Toaster, toaster } from "@/components/ui/toaster"
 import GroupItem, { CreateGroupItem } from "@/components/ui/group-item"
 
@@ -80,6 +82,24 @@ const Groups = () => {
                     />
                 ))}
             </SimpleGrid>
+
+            <Center>
+                <ButtonGroup>
+                    <Button
+                        onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
+                        isDisabled={currentPage === 0}
+                    >
+                        <FaCaretLeft />
+                    </Button>
+
+                    <Button
+                        onClick={() => setCurrentPage((p) => p + 1)}
+                        isDisabled={groups.length === 0}
+                    >
+                        <FaCaretRight />
+                    </Button>
+                </ButtonGroup>
+            </Center>
         </Container>
     )
 }

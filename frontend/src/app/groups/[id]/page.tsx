@@ -31,10 +31,10 @@ export default async function GroupPage({ params }) {
                     <HStack separator={<StackSeparator />}>
                         <Box pr={2}>
                             <VStack separator={<StackSeparator />} alignItems="flex-start">
-                                <Heading as="h1" fontSize="37px">{group.name}</Heading>
-                                <Heading as="h2">{group.associatedClass}</Heading>
-                                <Text>{group.times}</Text>
-                                <Text>{group.members}</Text>
+                                <Heading as="h1" fontSize="37px" p={1}>{group.name}</Heading>
+                                <Heading as="h2" p={1}>{group.associatedClass}</Heading>
+                                <Text p={1}>{group.times}</Text>
+                                <Text p={1}>{group.members}</Text>
                             </VStack>
                         </Box>
                         <Image
