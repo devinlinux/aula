@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 
 import com.michaelb.nucleus.models.Group;
 import com.michaelb.nucleus.repositories.GroupRepo;
+import com.michaelb.nucleus.util.FileOperations;
+import static com.michaelb.nucleus.util.Constants.GROUP_IMAGE_DIR;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -30,5 +32,12 @@ public class GroupService {
 
     public Page<Group> getAllGroups(int page, int size) {
         return this.repo.findAll(PageRequest.of(page, size, Sort.by("name")));
+    }
+
+    public String uploadBannerImage(String id, MultipartFile bannerImage) {
+        Group group = this.getGroupById(id);
+        String url = FileOperations.imageSaver(GROUP_IMAGE_DIR, group.getId(), bannerImage);
+        group.setBannerImage(url);
+        return url;
     }
 }
