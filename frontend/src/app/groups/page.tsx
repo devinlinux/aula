@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { Toaster, toaster } from "@/components/ui/toaster"
+import GroupItem from "@/components/ui/group-item"
 
 const Groups = () => {
     const [currentPage, setCurrentPage] = useState(0)
@@ -33,42 +34,8 @@ const Groups = () => {
             <Toaster />
 
             <SimpleGrid columns={3}>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
-            <Button onClick={() => getAllGroups(currentPage, 10)}>
-                PRESS ME
-            </Button>
+                <GroupItem
+                />
             </SimpleGrid>
         </Container>
     )
