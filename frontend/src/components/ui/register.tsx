@@ -25,7 +25,7 @@ import { PasswordInput } from "@/components/ui/password-input"
 const Register = () => {
     const steps = [ "Name", "Login Info", "School Info", "Profile Picture" ]
     const step = useSteps({
-        defaultStep: 1,
+        defaultStep: 0,
         count: steps.length,
     })
     const [registration, setRegistration] = useState({
@@ -37,20 +37,18 @@ const Register = () => {
     })
 
     const [profilePicture, setProfilePicture] = useState<File | null>(null)
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const submitAtEnd = () => {
-        console.log("ATTEMPTING SUBMIT")
-        //  TODO something is wrong and submitAll is not getting called or something
-        if (step.value === steps.length) {
+        if (step.value === steps.length - 1)  {
+            console.log("ATTEMPTING SUBMIT")
             submitAll()
         }
     }
 
     const submitAll = async () => {
-        setIsSubmitting(true)
+        console.log("SUBMIT ALL")
 
-        const registerPalyload = {
+        const registerPayload = {
             ...registration,
             graduationYear: Number(registration.graduationYear),
         }
@@ -114,13 +112,11 @@ const Register = () => {
             description: "Registration complete!",
             duration: 2000,
         })
-
-        setIsSubmitting(false)
     }
 
     return (
         <Container>
-            <Steps.RootProvider value={step} count={steps.length} onChange={(step) => setCurrentStep(step)}>
+            <Steps.RootProvider value={step} count={steps.length}>
                 <Steps.List>
                     {steps.map((step, index) => (
                         <Steps.Item key={index} index={index} title={step}>
@@ -275,7 +271,7 @@ const Register = () => {
                         </Steps.PrevTrigger>
                         <Steps.NextTrigger asChild>
                             <Button onClick={submitAtEnd}>
-                                {step.value === steps.length ? "Submit" : "Next"}
+                                {step.value === steps.length - 1 ? "Submit" : "Next"}
                             </Button>
                         </Steps.NextTrigger>
                     </ButtonGroup>
