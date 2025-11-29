@@ -1,15 +1,18 @@
 import {
     Container,
     Box,
+    Flex,
     Center,
     HStack,
     VStack,
     StackSeparator,
     Image,
+    Button,
     Heading,
     Text,
 } from "@chakra-ui/react"
 import { notFound } from "next/navigation"
+import { BiSolidEditAlt } from "react-icons/bi"
 import Banner from "@/components/ui/banner"
 
 export default async function GroupPage({ params }) {
@@ -26,6 +29,16 @@ export default async function GroupPage({ params }) {
     return (
         <Container maxW="container.md" pt={20}>
             <Banner text={group.name} fontSize="70px" letterSpacing="auto"/>
+            <Flex align="center" justifyContent="space-between" p={2}>
+                <Text color="white" pl={5}>
+                    {group.members[0]}
+                </Text>
+                <Box pr={5}>
+                    <Button size="sm" color="white">
+                        <BiSolidEditAlt />
+                    </Button>
+                </Box>
+            </Flex>
             <Box color="white">
                 <Center>
                     <HStack separator={<StackSeparator />}>
