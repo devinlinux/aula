@@ -45,7 +45,7 @@ const GroupItem = ({ id, name, associatedClass, times, bannerImage }) => {
     )
 }
 
-export const CreateGroupItem = () => {
+export const CreateGroupItem = ({ refreshGroups }) => {
     return (
         <Box w="100%" textAlign="center" color="white" p={5}>
             <Box borderRadius={12}>
@@ -72,7 +72,7 @@ export const CreateGroupItem = () => {
                                 </Dialog.Header>
 
                                 <Dialog.Body>
-                                    <CreateGroup />
+                                    <CreateGroup refreshGroups={refreshGroups}/>
                                 </Dialog.Body>
 
                                 <Dialog.CloseTrigger asChild>
@@ -83,9 +83,6 @@ export const CreateGroupItem = () => {
                     </Portal>
                 </Dialog.Root>
             </Box>
-            <Text fontSize={14} pt={2}>
-                Coordinate studying with your friends!
-            </Text>
         </Box>
     )
 }

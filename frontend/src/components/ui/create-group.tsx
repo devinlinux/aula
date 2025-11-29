@@ -16,7 +16,7 @@ import { FaUpload } from "react-icons/fa"
 import { FiFileMinus } from "react-icons/fi"
 import { Toaster, toaster } from "@/components/ui/toaster"
 
-const CreateGroup = () => {
+const CreateGroup = ({ refreshGroups }) => {
     const [group, setGroup] = useState({
         name: "",
         associatedClass: "",
@@ -85,6 +85,8 @@ const CreateGroup = () => {
             description: "Group created!",
             duration: 2000,
         })
+
+        refreshGroups()
     }
 
 

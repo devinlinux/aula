@@ -67,7 +67,7 @@ const Groups = () => {
             <Toaster />
 
             <SimpleGrid columns={3}>
-                <CreateGroupItem />
+                <CreateGroupItem refreshGroups={() => getAllGroups(currentPage)}/>
 
                 {groups.map((g) => (
                     <GroupItem
