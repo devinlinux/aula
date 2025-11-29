@@ -70,6 +70,11 @@ public class GroupController {
         return ResponseEntity.ok().body(Map.of("message", "Successfully added to group"));
     }
 
+    @PostMapping("/edit-group")
+    public ResponseEntity<Group> editGroup(@RequestBody Group group) {
+        return ResponseEntity.ok().body(this.groupService.createGroup(group));
+    }
+
     @PostMapping("/upload-banner-image")
     public ResponseEntity<String> uploadBannerImage(@RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok().body(this.groupService.uploadBannerImage(id, file));
