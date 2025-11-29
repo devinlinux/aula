@@ -3,6 +3,7 @@ package com.michaelb.nucleus.controllers;
 // imports
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
+import java.util.Map;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.UserService;
@@ -37,9 +39,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<LoginResponseDTO> registerUser(@RequestBody RegisterDTO request) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO request) {
         if (request.password() == null || request.password().isEmpty())
             throw new RuntimeException("register");
+
+        if (this.service.getUserByEmail(request.email()) != null)
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "User already exists"));
         User user = request.intoUser();
         User saved = this.service.registerUser(user);
 
