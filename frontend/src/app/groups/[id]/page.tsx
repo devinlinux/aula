@@ -73,12 +73,9 @@ export default async function GroupPage({ params }) {
                     </Dialog.Root>
 
 
-                    <Button size="sm" color="white">
-                        <BiSolidEditAlt />
-                        {/* TODO: create edit group modal, but auto pop with the info I have here*/}
-                        {/* TODO: forum - basically the same as group page - dynamic population and generation */}
-                        {/* TODO: move session management to user service */}
-                    </Button>
+                    {/* TODO: create edit group modal, but auto pop with the info I have here*/}
+                    {/* TODO: forum - basically the same as group page - dynamic population and generation */}
+                    {/* TODO: move session management to user service */}
                 </Box>
             </Flex>
             <Box color="white">
