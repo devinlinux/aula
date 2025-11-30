@@ -1,9 +1,14 @@
 package com.michaelb.nucleus.services;
 
 // imports
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.Scope;
 import jakarta.transaction.Transactional;
 
 import com.michaelb.nucleus.repositories.UserRepo;
@@ -13,13 +18,16 @@ import static com.michaelb.nucleus.util.Constants.USER_IMAGE_DIR;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
+@Scope("singleton")
 public class UserService {
     private final UserRepo repo;
     private final PasswordEncoder passwordEncoder;
+    private final ConcurrentMap<String, String> activeSessions;
 
     public UserService(UserRepo repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;
         this.passwordEncoder = passwordEncoder;
+        this.activeSessions = new ConcurrentHashMap<>();
     }
 
     public User registerUser(User user) {
@@ -47,5 +55,23 @@ public class UserService {
         user.setProfilePicture(url);
         this.repo.save(user);
         return url;
+    }
+
+    public String createSession(String email) {
+        String secret = UUID.randomUUID().toString();
+        this.activeSessions.put(secret, email);
+        return secret;
+    }
+
+    public boolean isLoggedIn(String secret) {
+        return this.activeSessions.containsKey(secret);
+    }
+
+    public void logout(String secret) {
+        this.activeSessions.remove(secret);
+    }
+
+    public String emailFromSecret(String secret) {
+        return this.activeSessions.get(secret);
     }
 }

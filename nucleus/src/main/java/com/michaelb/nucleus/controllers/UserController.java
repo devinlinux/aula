@@ -31,17 +31,15 @@ import com.michaelb.nucleus.dto.LoginResponseDTO;
 public class UserController {
 
     private final UserService service;
-    private final ConcurrentHashMap<String, Boolean> activeSessions;
 
     public UserController(UserService service) {
         this.service = service;
-        this.activeSessions = new ConcurrentHashMap<>();
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO request) {
         if (request.password() == null || request.password().isEmpty())
-            throw new RuntimeException("register");
+            throw new RuntimeException("Registration requires password");
 
         User exists = null;
         try {
@@ -53,11 +51,11 @@ public class UserController {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(Map.of("message", "User already exists"));
+
         User user = request.intoUser();
         User saved = this.service.registerUser(user);
 
-        String secret = UUID.randomUUID().toString();
-        this.activeSessions.put(secret, true);
+        String secret = this.service.createSession(user.getEmail());
         return ResponseEntity.ok().body(new LoginResponseDTO(saved.intoDTO(), secret));
     }
 
@@ -68,16 +66,14 @@ public class UserController {
 
         if (!valid)
             return ResponseEntity.notFound().build();
-        else {
-            String secret = UUID.randomUUID().toString();
-            this.activeSessions.put(secret, true);
-            return ResponseEntity.ok().body(new LoginResponseDTO(user.intoDTO(), secret));
-        }
+
+        String secret = this.service.createSession(user.getEmail());
+        return ResponseEntity.ok().body(new LoginResponseDTO(user.intoDTO(), secret));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestBody String secret) {
-        this.activeSessions.remove(secret);
+        this.service.logout(secret);
         return ResponseEntity.ok().body("Successfully logged out");
     }
 

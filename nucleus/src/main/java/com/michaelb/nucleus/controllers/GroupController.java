@@ -22,6 +22,7 @@ import com.michaelb.nucleus.models.Group;
 import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.GroupService;
 import com.michaelb.nucleus.dto.CreateGroupDTO;
+import com.michaelb.nucleus.dto.EditGroupDTO;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -71,12 +72,17 @@ public class GroupController {
     }
 
     @PostMapping("/edit-group")
-    public ResponseEntity<Group> editGroup(@RequestBody Group group) {
-        return ResponseEntity.ok().body(this.groupService.createGroup(group));
+    public ResponseEntity<Group> editGroup(@RequestBody EditGroupDTO group) {
+        return ResponseEntity.ok().body(this.groupService.createGroup(group.group().intoGroup()));
     }
 
     @PostMapping("/upload-banner-image")
     public ResponseEntity<String> uploadBannerImage(@RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok().body(this.groupService.uploadBannerImage(id, file));
+    }
+
+    @PostMapping("/edit-banner-image")
+    public ResponseEntity<String> editBannerImage(@RequestParam("secret") String secret, @RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok().body(this.groupService.uploadBannerImage(id, file));
     }
 
