@@ -8,12 +8,16 @@ import {
     StackSeparator,
     Image,
     Button,
+    CloseButton,
     Heading,
+    Dialog,
+    Portal,
     Text,
 } from "@chakra-ui/react"
 import { notFound } from "next/navigation"
 import { BiSolidEditAlt } from "react-icons/bi"
 import Banner from "@/components/ui/banner"
+import CreateGroup from "@/components/ui/create-group"
 
 export default async function GroupPage({ params }) {
     const { id } = await params
@@ -34,6 +38,41 @@ export default async function GroupPage({ params }) {
                     {group.members[0]}
                 </Text>
                 <Box pr={5}>
+
+                    <Dialog.Root initialFocusEl={null}>
+                        <Dialog.Trigger asChild>
+                            <Button size="sm" color="white">
+                                <BiSolidEditAlt />
+                            </Button>
+                        </Dialog.Trigger>
+                        <Portal>
+                            <Dialog.Backdrop />
+                            <Dialog.Positioner>
+                                <Dialog.Content bgColor="#202023" color="whiteAlpha.900">
+                                    <Dialog.Header>
+                                        <Dialog.Title>Edit Group</Dialog.Title>
+                                    </Dialog.Header>
+
+                                    <Dialog.Body>
+                                        <CreateGroup 
+                                            defaults={{
+                                                name: group.name,
+                                                associatedClass: group.associatedClass,
+                                                times: group.times,
+                                            }}
+                                            defaultBanner={`http://localhost:8080/api/banner-image/${id}`}
+                                        />
+                                    </Dialog.Body>
+
+                                    <Dialog.CloseTrigger asChild>
+                                        <CloseButton size="sm" color="white" _hover={{ bg: "none" }} />
+                                    </Dialog.CloseTrigger>
+                                </Dialog.Content>
+                            </Dialog.Positioner>
+                        </Portal>
+                    </Dialog.Root>
+
+
                     <Button size="sm" color="white">
                         <BiSolidEditAlt />
                         {/* TODO: create edit group modal, but auto pop with the info I have here*/}

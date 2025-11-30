@@ -16,15 +16,17 @@ import { FaUpload } from "react-icons/fa"
 import { FiFileMinus } from "react-icons/fi"
 import { Toaster, toaster } from "@/components/ui/toaster"
 
-const CreateGroup = ({ refreshGroups }) => {
-    const [group, setGroup] = useState({
+const CreateGroup = ({ refreshGroups, defaults = {}, defaultBanner = null }) => {
+    const baseGroup = {
         name: "",
         associatedClass: "",
-        times: [""],
-        creator: localStorage.getItem("email"),
-    })
+        times: "",
+        creator: typeof window !== "undefined" ? localStorage.getItem("email") : "",
+    }
 
-    const [bannerImage, setBannerImage] = useState<File | null>(null)
+    const [group, setGroup] = useState({ ...baseGroup, ...defaults })
+
+    const [bannerImage, setBannerImage] = useState(defaultBanner)
 
     const submitAll = async () => {
         let createResponse
@@ -101,6 +103,7 @@ const CreateGroup = ({ refreshGroups }) => {
                             Name <Field.RequiredIndicator />
                         </Field.Label>
                         <Input
+                            value={group.name}
                             placeholder="St. Thomas' Study Group"
                             borderColor="white"
                             onChange={(e) =>
@@ -113,6 +116,7 @@ const CreateGroup = ({ refreshGroups }) => {
                             Class <Field.RequiredIndicator />
                         </Field.Label>
                         <Input
+                            value={group.associatedClass}
                             placeholder="THL1000"
                             borderColor="white"
                             onChange={(e) =>
@@ -125,6 +129,7 @@ const CreateGroup = ({ refreshGroups }) => {
                             Meeting Times <Field.RequiredIndicator />
                         </Field.Label>
                         <Input
+                            value={group.times}
                             placeholder="MWF 9-10 PM"
                             borderColor="white"
                             onChange={(e) =>

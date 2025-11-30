@@ -90,11 +90,11 @@ export const CreateGroupItem = ({ refreshGroups }) => {
                                 </Dialog.Header>
 
                                 <Dialog.Body>
-                                    <CreateGroup refreshGroups={refreshGroups}/>
+                                    <CreateGroup refreshGroups={refreshGroups} />
                                 </Dialog.Body>
 
                                 <Dialog.CloseTrigger asChild>
-                                    <CloseButton size="sm" color="white" _hover={{ bg: "none" }}/>
+                                    <CloseButton size="sm" color="white" _hover={{ bg: "none" }} />
                                 </Dialog.CloseTrigger>
                             </Dialog.Content>
                         </Dialog.Positioner>
