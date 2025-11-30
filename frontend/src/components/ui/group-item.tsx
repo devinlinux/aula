@@ -16,7 +16,16 @@ import CreateGroup from "@/components/ui/create-group"
 
 const GroupItem = ({ id, name, associatedClass, times, bannerImage }) => {
     return (
-        <Box w="100%" textAlign="center" color="white" p={5}>
+        <Box
+            w="100%"
+            textAlign="center"
+            color="white"
+            p={5}
+            _hover={{
+                transform: "scale(1.05)",
+                transition: "transform 0.3s ease",
+            }}
+        >
             <LinkBox
                 as={NextLink}
                 href={`/groups/${id}`}
@@ -47,7 +56,16 @@ const GroupItem = ({ id, name, associatedClass, times, bannerImage }) => {
 
 export const CreateGroupItem = ({ refreshGroups }) => {
     return (
-        <Box w="100%" textAlign="center" color="white" p={5}>
+        <Box
+            w="100%"
+            textAlign="center"
+            color="white"
+            p={5}
+            _hover={{
+                transform: "scale(1.05)",
+                transition: "transform 0.3s ease",
+            }}
+        >
             <Box borderRadius={12}>
                 <Image
                     src={"/images/create_group.jpg"}

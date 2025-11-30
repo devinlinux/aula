@@ -16,7 +16,7 @@ import GroupItem, { CreateGroupItem } from "@/components/ui/group-item"
 const Groups = () => {
     const [currentPage, setCurrentPage] = useState(0)
     const [groups, setGroups] = useState([])
-    const size = 9
+    const size = 8
 
     const fetchBannerImage = async (id) => {
         try {
