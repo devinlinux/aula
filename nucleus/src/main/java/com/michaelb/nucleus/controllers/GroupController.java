@@ -4,6 +4,7 @@ package com.michaelb.nucleus.controllers;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Map;
 
 import com.michaelb.nucleus.services.UserService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 
 import com.michaelb.nucleus.models.Group;
@@ -72,7 +74,11 @@ public class GroupController {
     }
 
     @PostMapping("/edit-group")
-    public ResponseEntity<Group> editGroup(@RequestBody EditGroupDTO group) {
+    public ResponseEntity<?> editGroup(@RequestBody EditGroupDTO group) {
+        String email = this.userService.emailFromSecret(group.secret());
+        if (!Objects.equals(email, group.group().creator()))
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Incorrect user"));
+
         return ResponseEntity.ok().body(this.groupService.createGroup(group.group().intoGroup()));
     }
 
@@ -83,6 +89,11 @@ public class GroupController {
 
     @PostMapping("/edit-banner-image")
     public ResponseEntity<String> editBannerImage(@RequestParam("secret") String secret, @RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
+        Group group = this.groupService.getGroupById(id);
+        String email = this.userService.emailFromSecret(secret);
+        if (!Objects.equals(email, group.getCreator()))
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Incorrect user"));
+
         return ResponseEntity.ok().body(this.groupService.uploadBannerImage(id, file));
     }
 
