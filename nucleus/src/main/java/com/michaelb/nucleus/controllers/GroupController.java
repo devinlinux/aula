@@ -76,10 +76,15 @@ public class GroupController {
     @PostMapping("/edit-group")
     public ResponseEntity<?> editGroup(@RequestBody EditGroupDTO group) {
         String email = this.userService.emailFromSecret(group.secret());
-        if (!Objects.equals(email, group.group().creator()))
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Incorrect user"));
+        if (!Objects.equals(email, group.creator()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Incorrect user"));
 
-        return ResponseEntity.ok().body(this.groupService.createGroup(group.group().intoGroup()));
+        Group existing = this.groupService.getGroupById(group.id());
+        existing.setName(group.name());
+        existing.setAssociatedClass(group.associatedClass());
+        existing.setTimes(group.times());
+
+        return ResponseEntity.ok().body(this.groupService.createGroup(existing));
     }
 
     @PostMapping("/upload-banner-image")
