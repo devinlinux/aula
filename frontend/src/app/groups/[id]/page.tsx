@@ -17,7 +17,7 @@ import {
 import { notFound } from "next/navigation"
 import { BiSolidEditAlt } from "react-icons/bi"
 import Banner from "@/components/ui/banner"
-import CreateGroup from "@/components/ui/create-group"
+import EditGroup from "@/components/ui/edit-group"
 
 export default async function GroupPage({ params }) {
     const { id } = await params
@@ -35,7 +35,7 @@ export default async function GroupPage({ params }) {
             <Banner text={group.name} fontSize="70px" letterSpacing="auto"/>
             <Flex align="center" justifyContent="space-between" p={2}>
                 <Text color="white" pl={5}>
-                    {group.members[0]}
+                    {group.members[0]}'s Group
                 </Text>
                 <Box pr={5}>
 
@@ -54,8 +54,9 @@ export default async function GroupPage({ params }) {
                                     </Dialog.Header>
 
                                     <Dialog.Body>
-                                        <CreateGroup 
+                                        <EditGroup 
                                             defaults={{
+                                                id: group.id,
                                                 name: group.name,
                                                 associatedClass: group.associatedClass,
                                                 times: group.times,
@@ -74,6 +75,7 @@ export default async function GroupPage({ params }) {
 
 
                     {/* TODO: create edit group modal, but auto pop with the info I have here*/}
+                    {/* TODO: pass different function for submitting edits */}
                     {/* TODO: forum - basically the same as group page - dynamic population and generation */}
                     {/* TODO: move session management to user service */}
                 </Box>

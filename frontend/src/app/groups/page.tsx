@@ -83,7 +83,7 @@ const Groups = () => {
                 ))}
             </SimpleGrid>
 
-            <Center>
+            <Center pb={3}>
                 <ButtonGroup>
                     <Button
                         onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}

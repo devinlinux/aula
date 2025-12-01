@@ -16,8 +16,12 @@ import { FaUpload } from "react-icons/fa"
 import { FiFileMinus } from "react-icons/fi"
 import { Toaster, toaster } from "@/components/ui/toaster"
 
-const CreateGroup = ({ refreshGroups, defaults = {}, defaultBanner = null }) => {
+const EditGroup = ({ defaults = {}, defaultBanner = null }) => {
+    const secret = typeof window !== "undefined" ? localStorage.getItem("secret") : ""
+
     const baseGroup = {
+        secret: secret,
+        id: "",
         name: "",
         associatedClass: "",
         times: "",
@@ -28,19 +32,19 @@ const CreateGroup = ({ refreshGroups, defaults = {}, defaultBanner = null }) => 
     const [bannerImage, setBannerImage] = useState(defaultBanner)
 
     const submitAll = async () => {
-        let createResponse
+        let editResponse
 
         try {
-            createResponse = await fetch("http://localhost:8080/api/groups/create-group", {
+            editResponse = await fetch("http://localhost:8080/api/groups/edit-group", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(group),
             })
 
-            if (!createResponse.ok) {
+            if (!editResponse.ok) {
                 toaster.create({
                     type: "error",
-                    description: "Creating group failed, please try again later",
+                    description: "Editing group failed, please try again later",
                     duration: 2000,
                 })
                 return
@@ -54,68 +58,46 @@ const CreateGroup = ({ refreshGroups, defaults = {}, defaultBanner = null }) => 
             return
         }
 
-        const formData = new FormData()
+        if (bannerImage) {
+            const formData = new FormData()
 
-        const responseData = await createResponse.json()
-        formData.append("id", responseData.id)
-        formData.append("file", bannerImage)
+            const responseData = await editResponse.json()
+            formData.append("secret", secret)
+            formData.append("id", responseData.id)
+            formData.append("file", bannerImage)
 
-        try {
-            const uploadResponse = await fetch("http://localhost:8080/api/groups/upload-banner-image", {
-                method: "POST",
-                body: formData,
-            })
+            try {
+                const uploadResponse = await fetch("http://localhost:8080/api/groups/edit-banner-image", {
+                    method: "POST",
+                    body: formData,
+                })
 
-            if (!uploadResponse.ok) {
+                if (!uploadResponse.ok) {
+                    const data = await uploadResponse.json()
+                    console.log(data)
+                    toaster.create({
+                        type: "error",
+                        description: "Failed to upload banner image RESPONSE",
+                        duration: 2000,
+                    })
+                }
+            } catch (err) {
                 toaster.create({
                     type: "error",
-                    description: "Failed to upload banner image",
+                    description: "Failed to upload banner image ERR",
                     duration: 2000,
                 })
             }
-        } catch (err) {
-            toaster.create({
-                type: "error",
-                description: "Failed to upload banner image",
-                duration: 2000,
-            })
         }
 
         toaster.create({
             type: "success",
-            description: "Group created!",
+            description: "Edited Group!",
             duration: 2000,
         })
 
-        refreshGroups()
+        window.location.reload()
     }
-
-    const editGroup = async () => {
-        let editResponse
-
-        try {
-            editResponse = await fetch("http://localhost:8080/api/groups/edit-group")
-
-            if (!editResponse.ok) {
-                toaster.create({
-                    type: "error",
-                    description: "Failed to edit group, please try again later",
-                    duration: 2000,
-                })
-                return
-            }
-        } catch (err) {
-            toaster.create({
-                type: "error",
-                description: "Unable to connect to the server",
-                duration: 2000,
-            })
-            return
-        }
-
-        const formData = new FormData()
-    }
-
 
     return (
         <Container>
@@ -193,7 +175,7 @@ const CreateGroup = ({ refreshGroups, defaults = {}, defaultBanner = null }) => 
                         </InputGroup>
                     </FileUpload.Root>
                     <Button onClick={submitAll}>
-                        Create
+                        Submit Edits
                     </Button>
                 </VStack>
             </Box>
@@ -201,4 +183,4 @@ const CreateGroup = ({ refreshGroups, defaults = {}, defaultBanner = null }) => 
     )
 }
 
-export default CreateGroup
+export default EditGroup
