@@ -93,11 +93,11 @@ public class GroupController {
     }
 
     @PostMapping("/edit-banner-image")
-    public ResponseEntity<String> editBannerImage(@RequestParam("secret") String secret, @RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> editBannerImage(@RequestParam("secret") String secret, @RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
         Group group = this.groupService.getGroupById(id);
         String email = this.userService.emailFromSecret(secret);
         if (!Objects.equals(email, group.getCreator()))
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Incorrect user"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Incorrect user"));
 
         return ResponseEntity.ok().body(this.groupService.uploadBannerImage(id, file));
     }
