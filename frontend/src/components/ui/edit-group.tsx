@@ -73,18 +73,12 @@ const EditGroup = ({ defaults = {}, defaultBanner = null }) => {
                 })
 
                 if (!uploadResponse.ok) {
-                    const data = await uploadResponse.json()
-                    console.log(data)
-                    toaster.create({
-                        type: "error",
-                        description: "Failed to upload banner image RESPONSE",
-                        duration: 2000,
-                    })
+                    //  do nothing
                 }
             } catch (err) {
                 toaster.create({
                     type: "error",
-                    description: "Failed to upload banner image ERR",
+                    description: "Failed to upload banner image",
                     duration: 2000,
                 })
             }

@@ -1,11 +1,12 @@
 package com.michaelb.nucleus.models;
 
 // imports
+import java.util.List;
+import java.util.ArrayList;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
-import org.hibernate.annotations.UuidGenerator;
 import com.michaelb.nucleus.dto.UserDTO;
 
 @Entity
@@ -20,6 +21,7 @@ public class User {
     private String major;
     private Integer graduationYear;
     private String profilePicture;
+    private List<String> groups;
 
     public User() {
         this(null, null, null, null, null, 0, null);
@@ -33,6 +35,7 @@ public class User {
         this.major = major;
         this.graduationYear = graduationYear;
         this.profilePicture = profilePicture;
+        this.groups = new ArrayList<>();
     }
 
     public UserDTO intoDTO() {
@@ -43,6 +46,10 @@ public class User {
                 this.major,
                 this.graduationYear
         );
+    }
+
+    public void addToGroup(String id) {
+        this.groups.add(id);
     }
 
     public void setFirstName(String firstName) {
@@ -99,5 +106,13 @@ public class User {
 
     public String getProfilePicture() {
         return this.profilePicture;
+    }
+
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
+    }
+
+    public List<String> getGroups() {
+        return this.groups;
     }
 }

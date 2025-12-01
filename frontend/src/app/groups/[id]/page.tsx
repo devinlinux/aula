@@ -18,6 +18,7 @@ import { notFound } from "next/navigation"
 import { BiSolidEditAlt } from "react-icons/bi"
 import Banner from "@/components/ui/banner"
 import EditGroup from "@/components/ui/edit-group"
+import JoinGroupButton from "@/components/ui/join-group"
 
 export default async function GroupPage({ params }) {
     const { id } = await params
@@ -34,11 +35,17 @@ export default async function GroupPage({ params }) {
         <Container maxW="container.md" pt={20}>
             <Banner text={group.name} fontSize="70px" letterSpacing="auto"/>
             <Flex align="center" justifyContent="space-between" p={2}>
-                <Text color="white" pl={5}>
-                    {group.members[0]}'s Group
-                </Text>
-                <Box pr={5}>
+                <Box flex="1" pl={5}>
+                    <Text color="white">
+                        {group.members[0]}'s Group
+                    </Text>
+                </Box>
 
+                <Center flex="1">
+                    <JoinGroupButton id={group.id} />
+                </Center>
+
+                <Box flex="1" pr={5} textAlign="right">
                     <Dialog.Root initialFocusEl={null}>
                         <Dialog.Trigger asChild>
                             <Button size="sm" color="white">
@@ -74,10 +81,7 @@ export default async function GroupPage({ params }) {
                     </Dialog.Root>
 
 
-                    {/* TODO: create edit group modal, but auto pop with the info I have here*/}
-                    {/* TODO: pass different function for submitting edits */}
                     {/* TODO: forum - basically the same as group page - dynamic population and generation */}
-                    {/* TODO: move session management to user service */}
                 </Box>
             </Flex>
             <Box color="white">
@@ -88,7 +92,7 @@ export default async function GroupPage({ params }) {
                                 <Heading as="h1" fontSize="37px" p={1}>{group.name}</Heading>
                                 <Heading as="h2" p={1}>{group.associatedClass}</Heading>
                                 <Text p={1}>{group.times}</Text>
-                                <Text p={1}>{group.members}</Text>
+                                <Text p={1}>{group.members.join(", ")}</Text>
                             </VStack>
                         </Box>
                         <Image

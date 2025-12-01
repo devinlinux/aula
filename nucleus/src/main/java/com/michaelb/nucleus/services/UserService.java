@@ -57,6 +57,11 @@ public class UserService {
         return url;
     }
 
+    public void addToGroup(User user, String id) {
+        user.addToGroup(id);
+        this.repo.save(user);
+    }
+
     public String createSession(String email) {
         String secret = UUID.randomUUID().toString();
         this.activeSessions.put(secret, email);

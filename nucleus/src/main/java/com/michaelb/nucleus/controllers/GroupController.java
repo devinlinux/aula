@@ -25,6 +25,7 @@ import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.GroupService;
 import com.michaelb.nucleus.dto.CreateGroupDTO;
 import com.michaelb.nucleus.dto.EditGroupDTO;
+import com.michaelb.nucleus.dto.JoinGroupDTO;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -61,12 +62,11 @@ public class GroupController {
     }
 
     @PostMapping("/add-member")
-    public ResponseEntity<Map<String, String>> addMemberToGroup(
-            @RequestParam(value = "id") String id,
-            @RequestParam(value = "email") String email)
-    {
-        Group group = this.groupService.getGroupById(id);
-        User user = this.userService.getUserByEmail(email);
+    public ResponseEntity<Map<String, String>> addMemberToGroup(@RequestBody JoinGroupDTO request) {
+        Group group = this.groupService.getGroupById(request.id());
+        User user = this.userService.getUserByEmail(request.email());
+
+        this.userService.addToGroup(user, group.getId());
 
         group.addMember(user.getFirstName() + " " + user.getLastName());
         this.groupService.createGroup(group);  //  essentially just saving
