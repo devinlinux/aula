@@ -43,4 +43,9 @@ public class ForumController {
     public ResponseEntity<ForumPost> getPost(@PathVariable String id) {
         return ResponseEntity.ok().body(this.forumService.getPostById(id));
     }
+
+    @GetMapping("/health-check")
+    public String healthCheck() {
+        return "Hello, World";
+    }
 }
