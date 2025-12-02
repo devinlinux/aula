@@ -38,4 +38,9 @@ public class ForumController {
     public ResponseEntity<ForumPost> createPost(@RequestBody CreatePostDTO request) {
         return ResponseEntity.ok().body(this.forumService.createPost(request.intoPost()));
     }
+
+    @GetMapping("/forum/{id}")
+    public ResponseEntity<ForumPost> getPost(@PathVariable String id) {
+        return ResponseEntity.ok().body(this.forumService.getPostById(id));
+    }
 }
