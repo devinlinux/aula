@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
-import { Text } from "@chakra-ui/react"
+import { Text, Image } from "@chakra-ui/react"
 import styled from "@emotion/styled"
 import React, { useEffect, useState } from "react"
 
@@ -64,6 +63,7 @@ const Profile = () => {
                         width={30}
                         height={30}
                         alt="profile picture"
+                        borderRadius="full"
                     />
                 ) : (
                     <Image
@@ -71,6 +71,7 @@ const Profile = () => {
                         width={30}
                         height={30}
                         alt="default profile"
+                        borderRadius="full"
                     />
                 )}
             </LogoBox>
