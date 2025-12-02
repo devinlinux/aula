@@ -41,6 +41,8 @@ const JoinGroupButton = ({ id }) => {
             description: "Joined group!",
             duration: 2000,
         })
+
+        window.location.reload()
     }
 
     return (
