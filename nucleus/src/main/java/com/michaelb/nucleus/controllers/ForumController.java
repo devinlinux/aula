@@ -50,6 +50,10 @@ public class ForumController {
         ForumPost post = this.forumService.getPostById(request.id());
         User user = this.userService.getUserByEmail(request.email());
 
+        String name = String.format("%s %s", user.getFirstName(), user.getLastName());
+        post.addResponse(new ForumResponse(name, user.getEmail(), request.contents()));
+        this.forumService.createPost(post);
+
         return ResponseEntity.ok().body(Map.of("message", "Successfully added response"));
     }
 

@@ -101,6 +101,7 @@ public class GroupController {
     public ResponseEntity<?> editBannerImage(@RequestParam("secret") String secret, @RequestParam("id") String id, @RequestParam("file") MultipartFile file) {
         Group group = this.groupService.getGroupById(id);
         String email = this.userService.emailFromSecret(secret);
+
         if (!Objects.equals(email, group.getCreator()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Incorrect user"));
 
