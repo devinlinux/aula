@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Text } from "@chakra-ui/react"
+import { Box, Button, Text } from "@chakra-ui/react"
 import { Toaster, toaster } from "@/components/ui/toaster"
 
 const JoinGroupButton = ({ id }) => {
@@ -11,6 +11,7 @@ const JoinGroupButton = ({ id }) => {
             email: email,
         })
 
+        let joinResponse
         try {
             joinResponse = await fetch("http://localhost:8080/api/groups/add-member", {
                 method: "POST",
@@ -24,8 +25,8 @@ const JoinGroupButton = ({ id }) => {
                     description: "Failed to join group, please try again later",
                     duration: 2000,
                 })
+                return
             }
-            return
         } catch (err) {
             toaster.create({
                 type: "error",
@@ -40,14 +41,15 @@ const JoinGroupButton = ({ id }) => {
             description: "Joined group!",
             duration: 2000,
         })
-
-        window.location.reload()
     }
 
     return (
-        <Button onClick={joinGroup}>
-            <Text fontWeight="bold">Join Group</Text>
-        </Button>
+        <Box>
+            <Toaster />
+            <Button onClick={joinGroup}>
+                <Text fontWeight="bold">Join Group</Text>
+            </Button>
+        </Box>
     )
 }
 
