@@ -53,7 +53,7 @@ public class GroupController {
     @GetMapping("/get-all-groups")
     public ResponseEntity<Page<Group>> getAllGroups(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value="size", defaultValue="10") int size)
+            @RequestParam(value = "size", defaultValue="8") int size)
     {
         return ResponseEntity.ok().body(this.groupService.getAllGroups(page, size));
     }

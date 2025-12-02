@@ -40,6 +40,14 @@ public class ForumController {
         return ResponseEntity.ok().body(this.forumService.createPost(request.intoPost()));
     }
 
+    @GetMapping("/get-all-posts")
+    public ResponseEntity<Page<ForumPost>> getAllPosts(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size)
+    {
+        return ResponseEntity.ok().body(this.forumService.getAllPosts(page, size));
+    }
+
     @GetMapping("/forum/{id}")
     public ResponseEntity<ForumPost> getPost(@PathVariable String id) {
         return ResponseEntity.ok().body(this.forumService.getPostById(id));
