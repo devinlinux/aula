@@ -52,6 +52,10 @@ public class User {
         this.groups.add(id);
     }
 
+    public boolean isInGroup(String id) {
+        return this.groups.contains(id);
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

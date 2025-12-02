@@ -66,6 +66,9 @@ public class GroupController {
         Group group = this.groupService.getGroupById(request.id());
         User user = this.userService.getUserByEmail(request.email());
 
+        if (user.isInGroup(group.getId()))
+            return ResponseEntity.ok().body(Map.of("message", "Already in group"));
+
         this.userService.addToGroup(user, group.getId());
 
         group.addMember(user.getFirstName() + " " + user.getLastName());
