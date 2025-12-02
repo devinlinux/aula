@@ -21,6 +21,7 @@ import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.ForumService;
 import com.michaelb.nucleus.services.UserService;
 import com.michaelb.nucleus.dto.CreatePostDTO;
+import com.michaelb.nucleus.dto.AddResponseDTO;
 
 @RestController
 @RequestMapping("/api/forum")
@@ -42,6 +43,14 @@ public class ForumController {
     @GetMapping("/forum/{id}")
     public ResponseEntity<ForumPost> getPost(@PathVariable String id) {
         return ResponseEntity.ok().body(this.forumService.getPostById(id));
+    }
+
+    @PostMapping("/add-response")
+    public ResponseEntity<Map<String, String>> addResponseToPost(@RequestBody AddResponseDTO request) {
+        ForumPost post = this.forumService.getPostById(request.id());
+        User user = this.userService.getUserByEmail(request.email());
+
+        return ResponseEntity.ok().body(Map.of("message", "Successfully added response"));
     }
 
     @GetMapping("/health-check")
