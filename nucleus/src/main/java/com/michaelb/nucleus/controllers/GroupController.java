@@ -47,7 +47,7 @@ public class GroupController {
         this.userService.addToGroup(creator, group.getId());
         group.addMember(creator.getFirstName() + " " + creator.getLastName());
 
-        return ResponseEntity.ok().body(group);
+        return ResponseEntity.ok().body(this.groupService.createGroup(group));
     }
 
     @GetMapping("/get-all-groups")
