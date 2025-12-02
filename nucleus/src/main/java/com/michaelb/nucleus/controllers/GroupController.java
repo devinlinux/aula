@@ -1,13 +1,12 @@
 package com.michaelb.nucleus.controllers;
 
-// imports
+//  imports
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Map;
 
-import com.michaelb.nucleus.services.UserService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +22,7 @@ import org.springframework.data.domain.Page;
 import com.michaelb.nucleus.models.Group;
 import com.michaelb.nucleus.models.User;
 import com.michaelb.nucleus.services.GroupService;
+import com.michaelb.nucleus.services.UserService;
 import com.michaelb.nucleus.dto.CreateGroupDTO;
 import com.michaelb.nucleus.dto.EditGroupDTO;
 import com.michaelb.nucleus.dto.JoinGroupDTO;

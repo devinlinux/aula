@@ -1,7 +1,7 @@
 package com.michaelb.nucleus.models;
 
-// imports
-import java.util.ArrayList;
+//  imports
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +20,7 @@ public class Group {
     private String name;
     private String associatedClass;
     private String times;
-    private ArrayList<String> members;
+    private List<String> members;
     private String creator;
     private String bannerImage;
 
@@ -28,7 +28,7 @@ public class Group {
         this(null, null, null, null, null, null);
     }
 
-    public Group(String name, String associatedClass, String times, ArrayList<String> members, String creator, String bannerImage) {
+    public Group(String name, String associatedClass, String times, List<String> members, String creator, String bannerImage) {
         this.name = name;
         this.associatedClass = associatedClass;
         this.times = times;
@@ -73,11 +73,11 @@ public class Group {
         return this.times;
     }
 
-    public void setMembers(ArrayList<String> members) {
+    public void setMembers(List<String> members) {
         this.members = members;
     }
 
-    public ArrayList<String> getMembers() {
+    public List<String> getMembers() {
         return this.members;
     }
 

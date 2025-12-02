@@ -4,9 +4,9 @@ package com.michaelb.nucleus.repositories;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.michaelb.nucleus.models.Group;
+import com.michaelb.nucleus.models.ForumPost;
 
 @Repository
-public interface GroupRepo extends JpaRepository<Group, String> {
-    Optional<Group> findById(String id);
+public interface ForumRepo extends JpaRepository<ForumPost, String> {
+    Optional<ForumPost> findById(String id);
 }
