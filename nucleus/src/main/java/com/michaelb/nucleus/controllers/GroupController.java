@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +58,16 @@ public class GroupController {
             @RequestParam(value = "size", defaultValue="8") int size)
     {
         return ResponseEntity.ok().body(this.groupService.getAllGroups(page, size));
+    }
+
+    @GetMapping("/groups-for-user/{email}")
+    public ResponseEntity<List<Group>> getGroupsForUser(@PathVariable String email) {
+        User user = this.userService.getUserByEmail(email);
+        List<Group> groups = new ArrayList<>();
+        for (String id : user.getGroups())
+            groups.add(this.groupService.getGroupById(id));
+
+        return ResponseEntity.ok().body(groups);
     }
 
     @GetMapping("group/{id}")
