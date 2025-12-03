@@ -3,12 +3,19 @@
 import {
     Container,
     Box,
+    Flex,
+    VStack,
     Center,
-    SimpleGrid,
+    Dialog,
+    Portal,
     Button,
+    CloseButton,
+    Text,
 } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { Toaster, toaster } from "@/components/ui/toaster"
+import ForumItem from "@/components/ui/forum-item"
+import CreatePost from "@/components/ui/create-post"
 
 const Forum = () => {
     const [currentPage, setCurrentPage] = useState(0)
@@ -28,7 +35,7 @@ const Forum = () => {
             }
 
             const json = await res.json()
-            setPosts(json)
+            setPosts(json.content)
         } catch (err) {
             toaster.create({
                 type: "error",
@@ -43,8 +50,53 @@ const Forum = () => {
     }, [currentPage])
 
     return (
-        <Container>
+        <Container maxW="container.lg" pt={20}>
             <Toaster />
+
+            <Flex align="center" justifyContent="space-between" p={2} color="white" bgColor="#202023" borderRadius={12} mb={7}>
+
+                <Box pl={5}>
+                    <Text fontWeight="bold" fontSize="lg">AULA FORUM</Text>
+                </Box>
+
+                <Box pr={5}>
+                    <Dialog.Root>
+                        <Dialog.Trigger asChild>
+                            <Button borderRadius={6}>Create Post</Button>
+                        </Dialog.Trigger>
+                        <Portal>
+                            <Dialog.Backdrop />
+                            <Dialog.Positioner>
+                                <Dialog.Content bgColor="#202023" color="whiteAlpha.900">
+                                    <Dialog.Header>
+                                        Create Post
+                                    </Dialog.Header>
+
+                                    <Dialog.Body>
+                                        <CreatePost refreshFn={() => getAllPosts(currentPage)} />
+                                    </Dialog.Body>
+
+                                    <Dialog.CloseTrigger asChild>
+                                        <CloseButton size="sm" color="white" _hover={{ bg: "none" }} />
+                                    </Dialog.CloseTrigger>
+                                </Dialog.Content>
+                            </Dialog.Positioner>
+                        </Portal>
+                    </Dialog.Root>
+                </Box>
+
+            </Flex>
+
+            {posts.map((p) => (
+                <ForumItem
+                    key={p.id}
+                    id={p.id}
+                    title={p.name}
+                    associatedClass={p.associatedClass}
+                    contents={p.contents}
+                    poster={p.poster}
+                />
+            ))}
         </Container>
     )
 }

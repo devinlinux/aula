@@ -6,9 +6,9 @@ import {
     LinkBox,
     LinkOverlay,
     Dialog,
+    Portal,
     Button,
     CloseButton,
-    Portal,
     Text,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
