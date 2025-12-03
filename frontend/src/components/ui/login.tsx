@@ -56,7 +56,7 @@ const Login = () => {
         })
 
         localStorage.setItem("email", login.email)
-        window.location.replace("http://localhost:3000/groups")
+        window.location.href = "http://localhost:3000/groups"
     }
 
     return (

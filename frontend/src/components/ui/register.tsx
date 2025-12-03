@@ -112,7 +112,7 @@ const Register = () => {
         })
 
         localStorage.setItem("email", registration.email)
-        window.location.replace("http://localhost:3000/groups")
+        window.location.href = "http://localhost:3000/groups"
     }
 
     return (
