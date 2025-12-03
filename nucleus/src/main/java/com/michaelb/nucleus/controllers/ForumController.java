@@ -54,7 +54,7 @@ public class ForumController {
         return ResponseEntity.ok().body(this.forumService.getAllPosts(page, size));
     }
 
-    @GetMapping("/forum/{id}")
+    @GetMapping("/post/{id}")
     public ResponseEntity<ForumPost> getPost(@PathVariable String id) {
         return ResponseEntity.ok().body(this.forumService.getPostById(id));
     }
