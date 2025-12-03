@@ -28,6 +28,6 @@ public class ForumService {
     }
 
     public Page<ForumPost> getAllPosts(int page, int size) {
-        return this.repo.findAll(PageRequest.of(page, size, Sort.by("creationTime")));
+        return this.repo.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "creationTime")));
     }
 }

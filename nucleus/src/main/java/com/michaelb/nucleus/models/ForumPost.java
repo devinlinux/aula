@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.JoinColumn;
-
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
