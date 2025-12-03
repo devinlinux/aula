@@ -91,7 +91,7 @@ const Forum = () => {
                 <ForumItem
                     key={p.id}
                     id={p.id}
-                    title={p.name}
+                    title={p.title}
                     associatedClass={p.associatedClass}
                     contents={p.contents}
                     poster={p.poster}
