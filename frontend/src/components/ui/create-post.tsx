@@ -33,7 +33,10 @@ const CreatePost = ({ refreshFn }) => {
 
     const submitAll = async () => {
         const currentUnixTime = Math.floor(Date.now() / 1000)
-        setPost({ ...post, creationTime: currentUnixTime })
+        const postToSend = {
+            ...post,
+            creationTime: currentUnixTime,
+        }
 
         let createResponse
 
@@ -41,7 +44,7 @@ const CreatePost = ({ refreshFn }) => {
             createResponse = await fetch("http://localhost:8080/api/forum/create-post", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(post)
+                body: JSON.stringify(postToSend)
             })
 
             if (!createResponse.ok) {
