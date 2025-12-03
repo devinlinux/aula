@@ -2,11 +2,13 @@ package com.michaelb.nucleus.models;
 
 //  imports
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Column;
 
 @Embeddable
 public class ForumResponse {
     private String posterName;
     private String posterEmail;
+    @Column(columnDefinition = "TEXT")
     private String contents;
 
     public ForumResponse() {

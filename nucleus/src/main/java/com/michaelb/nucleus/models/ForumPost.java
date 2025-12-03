@@ -14,7 +14,7 @@ import jakarta.persistence.JoinColumn;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Table(name="forum_posts")
+@Table(name = "forum_posts")
 public class ForumPost {
     @Id
     @UuidGenerator()
@@ -23,11 +23,12 @@ public class ForumPost {
     private Long creationTime;
     private String title;
     private String associatedClass;
+    @Column(columnDefinition = "TEXT")
     private String contents;
     private String poster;
 
     @ElementCollection
-    @CollectionTable(name="forum_responses", joinColumns=@JoinColumn(name="forum_post_id"))
+    @CollectionTable(name = "forum_responses", joinColumns=@JoinColumn(name = "forum_post_id"))
     private List<ForumResponse> responses;
 
     public ForumPost() {
