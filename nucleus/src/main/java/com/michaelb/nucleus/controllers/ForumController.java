@@ -37,7 +37,13 @@ public class ForumController {
 
     @PostMapping("/create-post")
     public ResponseEntity<ForumPost> createPost(@RequestBody CreatePostDTO request) {
-        return ResponseEntity.ok().body(this.forumService.createPost(request.intoPost()));
+        ForumPost post = request.intoPost();
+
+        User user = this.userService.getUserByEmail(request.email());
+        String name = String.format("%s %s", user.getFirstName(), user.getLastName());
+        post.setPoster(name);
+
+        return ResponseEntity.ok().body(this.forumService.createPost(post));
     }
 
     @GetMapping("/get-all-posts")
