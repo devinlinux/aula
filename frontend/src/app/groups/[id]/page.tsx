@@ -79,9 +79,6 @@ export default async function GroupPage({ params }) {
                             </Dialog.Positioner>
                         </Portal>
                     </Dialog.Root>
-
-
-                    {/* TODO: forum - basically the same as group page - dynamic population and generation */}
                 </Box>
             </Flex>
             <Box color="white">
